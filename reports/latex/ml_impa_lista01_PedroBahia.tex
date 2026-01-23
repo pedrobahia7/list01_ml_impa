@@ -95,11 +95,9 @@ Logo, a performance de ambos os modelos será a mesma. Então para o case de $\l
 \newpage
 
 
-\section{Exercício 2}
+\section{Exercício 2d}
 
-\subsection{Parte d}
-
-\subsubsection{i) Geração dos Dados Heteroscedásticos}
+\subsection{i) Gera\c{c}\~ao dos Dados Heteroscedásticos}
 
 Primeiramente, geramos os dados com heterocedasticidade usando a matriz de covariância $\Sigma$ diagonal:
 
@@ -150,7 +148,7 @@ As Figuras \ref{fig:errors_hist} e \ref{fig:errors_values} mostram a distribuiç
     \label{fig:errors_values}
 \end{figure}
 
-\subsubsection{ii) Estimadores de Mínimos Quadrados}
+\subsection{ii) Estimadores de Mínimos Quadrados}
 
 Implementamos tanto o estimador de mínimos quadrados ordinários quanto o estimador generalizado que considera a matriz de covariância $\Sigma$:
 
@@ -181,7 +179,7 @@ print("Beta Sigma:", beta_hat_sigma)
 
 Os resultados mostram que o estimador generalizado (que considera $\Sigma$) tem menor erro em relação aos parâmetros verdadeiros.
 
-\subsubsection{iii) Cálculo de p-valores para Mínimos Quadrados Ordinários}
+\subsection{iii) Cálculo de p-valores para Mínimos Quadrados Ordinários}
 
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
 def p_value_ordinary_least_square(X: np.ndarray, Y: np.ndarray, 
@@ -211,7 +209,7 @@ def p_value_ordinary_least_square(X: np.ndarray, Y: np.ndarray,
     return p_value
 \end{lstlisting}
 
-\subsubsection{iv) Estatística Z para o Estimador Generalizado}
+\subsection{iv) Estatística Z para o Estimador Generalizado}
 
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
 def calculate_Z_sigma(X: np.ndarray, Sigma: np.ndarray, 
@@ -227,7 +225,7 @@ def calculate_Z_sigma(X: np.ndarray, Sigma: np.ndarray,
     return Z
 \end{lstlisting}
 
-\subsubsection{v) P-valores para o Estimador Generalizado}
+\subsection{v) P-valores para o Estimador Generalizado}
 
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
 def p_value_generalized_least_square(X: np.ndarray, Y: np.ndarray,
@@ -259,7 +257,7 @@ def p_value_generalized_least_square(X: np.ndarray, Y: np.ndarray,
 
 Esta implementação permite comparar os dois estimadores e calcular a significância estatística dos coeficientes em ambos os casos.
 
-\subsubsection{vi) Resultados Numéricos}
+\subsection{vi) Resultados Numéricos}
 
 Executando o código implementado, obtemos os seguintes resultados:
 
@@ -311,11 +309,9 @@ Com o estimador generalizado, ambos os coeficientes são altamente significativo
 \newpage
 
 
-\section{Exercício 3}
+\section{Exercício 3f}
 
-\subsection{Parte f}
-
-\subsubsection{i) Implementação dos Estimadores}
+\subsection{i) Implementa\c{c}\~ao dos Estimadores}
 
 Neste exercício, comparamos estimadores baseados em diferentes suposições sobre a distribuição dos erros. Implementamos estimadores que minimizam diferentes funções de perda:
 
@@ -387,7 +383,7 @@ As Figuras \ref{fig:errors_hist_q3} e \ref{fig:errors_values_q3} mostram a anál
     \label{fig:errors_values_q3}
 \end{figure}
 
-\subsubsection{ii) Comparação dos Estimadores}
+\subsection{ii) Comparação dos Estimadores}
 
 Calculamos os estimadores para ambas as distribuições de erro:
 
@@ -416,7 +412,7 @@ A Figura \ref{fig:regression_fits} compara visualmente os ajustes:
     \label{fig:regression_fits}
 \end{figure}
 
-\subsubsection{iii) Robustez a Outliers}
+\subsection{iii) Robustez a Outliers}
 
 Para testar a robustez, adicionamos um outlier extremo ao dataset:
 
@@ -542,7 +538,7 @@ for model_type in models_to_test:
 
 \subsection{Comparação de Performance dos Modelos}
 
-\subsubsection{Análise Geral dos Algoritmos}
+\subsection{Análise Geral dos Algoritmos}
 
 A Figura \ref{fig:models_comparison} compara os erros de treinamento e teste para todos os modelos:
 
@@ -565,7 +561,7 @@ for model_name in models_to_test:
     plt.scatter(train_error, test_error, label=model_type_name)
 \end{lstlisting}
 
-\subsubsection{Análise Específica do k-NN}
+\subsection{Análise Específica do k-NN}
 
 A Figura \ref{fig:knn_comparison} mostra como a performance do k-NN varia com diferentes valores de k:
 
@@ -631,7 +627,7 @@ for k in range(1, 11):
 
 \newpage
 
-\section{Exercício 5}
+\section{Exercício 5b}
 
 \subsection{Métodos de Seleção de Modelos}
 
@@ -641,10 +637,9 @@ Neste exercício, implementamos e comparamos diferentes métodos de seleção de
     \item \textbf{Best Subset Selection}: Avalia todas as combinações possíveis de features
     \item \textbf{Forward Stepwise Selection}: Adiciona features sequencialmente
     \item \textbf{Backward Stepwise Selection}: Remove features sequencialmente
-    \item \textbf{Lasso Regression}: Regularização L1 com seleção automática de features
 \end{itemize}
 
-\subsubsection{Preparação dos Dados}
+\subsection{Preparação dos Dados}
 
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
 import statsmodels.api as sm
@@ -668,7 +663,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 kf = KFold(n_splits=5, shuffle=True, random_state=10)
 \end{lstlisting}
 
-\subsubsection{Implementação dos Algoritmos}
+\subsection{Implementação dos Algoritmos}
 
 \textbf{Best Subset Selection:}
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
@@ -803,6 +798,10 @@ def backward_stepwise_selection(X_train: np.ndarray, Y_train: np.ndarray) -> dic
     return best_model_k
 \end{lstlisting}
 
+\newpage
+
+\section{Exercício 5c}
+
 \subsection{Comparação dos Métodos - R²}
 
 A Figura \ref{fig:model_selection_r2} compara o desempenho dos três métodos em termos de R²:
@@ -823,9 +822,13 @@ A Figura \ref{fig:model_selection_r2} compara o desempenho dos três métodos em
     \item \textbf{Divergência}: A partir de 4+ features, backward stepwise pode encontrar soluções ligeiramente diferentes
 \end{itemize}
 
+\newpage
+
+\section{Exercício 5d}
+
 \subsection{Regressão Lasso com Validação Cruzada}
 
-\subsubsection{Seleção do Parâmetro de Regularização}
+\subsection{Seleção do Parâmetro de Regularização}
 
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
 # Cross-validation for Lasso
@@ -870,6 +873,10 @@ A Figura \ref{fig:lasso_cv} mostra a curva de validação cruzada para o Lasso:
     \item \textbf{Features selecionadas}: Todas (coeficientes não-zero para todas as 13 features)
     \item \textbf{Maior coeficiente}: Abdomen (10.04) - confirma sua importância
 \end{itemize}
+
+\newpage
+
+\section{Exercício 5e}
 
 \subsection{Comparação no Conjunto de Teste}
 
