@@ -257,31 +257,206 @@ def p_value_generalized_least_square(X: np.ndarray, Y: np.ndarray,
 
 Esta implementação permite comparar os dois estimadores e calcular a significância estatística dos coeficientes em ambos os casos.
 
+\subsubsection{vi) Resultados Numéricos}
+
+Executando o código implementado, obtemos os seguintes resultados:
+
+\textbf{Comparação dos Estimadores:}
+\begin{itemize}
+    \item Parâmetros Verdadeiros: $\beta = [1.0, 0.25]$
+    \item Estimador Ordinário: $\hat{\beta}_{OLS} = [-34.463, 6.948]$
+    \item Estimador Generalizado: $\hat{\beta}_{\Sigma} = [1.019, 0.244]$
+\end{itemize}
+
+\textbf{Erro Quadrático dos Estimadores:}
+\begin{itemize}
+    \item $\|\beta - \hat{\beta}_{OLS}\|_2^2 = 1302.51$
+    \item $\|\beta - \hat{\beta}_{\Sigma}\|_2^2 = 0.000387$
+\end{itemize}
+
+O estimador generalizado apresenta erro dramaticamente menor (cerca de 3.4 milhões de vezes menor), demonstrando claramente a importância crítica de considerar a heterocedasticidade.
+
+\textbf{Testes de Hipótese - Mínimos Quadrados Ordinários:}
+\begin{itemize}
+    \item p-valor para $\beta_0$: 0.1544
+    \item p-valor para $\beta_1$: 0.7422
+\end{itemize}
+
+Com nível de significância de 5\%, não podemos rejeitar a hipótese nula para ambos os coeficientes usando o estimador ordinário.
+
+\textbf{Testes de Hipótese - Estimador Generalizado:}
+\begin{itemize}
+    \item Estatística Z para $\beta_0$: 73.67
+    \item p-valor para $\beta_0$: $< 10^{-15}$ (praticamente zero)
+    \item p-valor para $\beta_1$: $< 10^{-15}$ (praticamente zero)
+\end{itemize}
+
+Com o estimador generalizado, ambos os coeficientes são altamente significativos estatisticamente, evidenciando a superior eficiência deste método.
+
+\textbf{Conclusões:}
+\begin{enumerate}
+    \item O estimador de mínimos quadrados ordinários (OLS) falha completamente na presença de heterocedasticidade severa, fornecendo estimativas muito distantes dos valores verdadeiros ($\hat{\beta}_0 = -34.46$ vs $\beta_0 = 1.0$).
+
+    \item O estimador generalizado (GLS) é extremamente superior, com erro cerca de 3.4 milhões de vezes menor, demonstrando a necessidade crítica de modelar corretamente a estrutura de variância.
+
+    \item Os testes de significância baseados no OLS são não-confiáveis, falhando em detectar coeficientes que são claramente diferentes de zero.
+
+    \item O estimador GLS fornece testes estatísticos apropriados, detectando corretamente a significância dos parâmetros.
+
+    \item Este exemplo ilustra dramaticamente por que a correção para heterocedasticidade não é apenas uma melhoria técnica, mas uma necessidade fundamental para análise estatística válida.
+\end{enumerate}
+
 \newpage
 
 
-\section{Exercício 3a}
-Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+\section{Exercício 3}
 
-\newpage
+\subsection{Parte f}
 
-\section{Exercício 3b}
-Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+\subsubsection{i) Implementação dos Estimadores}
 
-\newpage
+Neste exercício, comparamos estimadores baseados em diferentes suposições sobre a distribuição dos erros. Implementamos estimadores que minimizam diferentes funções de perda:
 
-\section{Exercício 3c}
-Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+import numpy as np
+import scipy
+import matplotlib.pyplot as plt
 
-\newpage
+def beta_ordinary(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+    """
+    Compute the ordinary least squares estimator.
+    """
+    beta = np.linalg.inv(X.T @ X) @ X.T @ Y
+    return beta
 
-\section{Exercício 3d}
-Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+def calculate_beta_hat(X: np.ndarray, Y: np.ndarray, error_distribution: str) -> np.ndarray:
+    """
+    Compute the estimator beta_hat based on the specified error distribution.
+    """
+    np.random.seed(0)
+    p = X.shape[1]
+    
+    if error_distribution == "gaussian":
+        def loss_function(beta):
+            return np.sum((Y - X @ beta) ** 2)
+    elif error_distribution == "laplacian":
+        def loss_function(beta):
+            return np.sum(np.abs(Y - X @ beta))
+    else:
+        raise ValueError("Unsupported error distribution")
+    
+    beta_0 = np.random.uniform(size=p)
+    beta_hat = scipy.optimize.minimize(loss_function, beta_0)
+    return beta_hat["x"]
+\end{lstlisting}
 
-\newpage
+Geramos dados sintéticos para testar os estimadores:
 
-\section{Exercício 3e}
-Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+np.random.seed(1)
+beta = np.array([-1.5, 2.0])
+input_range = np.linspace(-1, 1, 100)
+X = np.vstack([np.ones(100), input_range]).T
+y = X @ beta + np.random.normal(0, 0.3, 100)
+\end{lstlisting}
+
+A Figura \ref{fig:data_scatter_q3} mostra os dados gerados:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/3/data_scatter.png}
+    \caption{Dados sintéticos para comparação dos estimadores}
+    \label{fig:data_scatter_q3}
+\end{figure}
+
+As Figuras \ref{fig:errors_hist_q3} e \ref{fig:errors_values_q3} mostram a análise dos erros:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/3/errors_histogram.png}
+    \caption{Histograma dos erros}
+    \label{fig:errors_hist_q3}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/3/error_values_by_index.png}
+    \caption{Valores dos erros por índice}
+    \label{fig:errors_values_q3}
+\end{figure}
+
+\subsubsection{ii) Comparação dos Estimadores}
+
+Calculamos os estimadores para ambas as distribuições de erro:
+
+\textbf{Resultados sem Outliers:}
+\begin{itemize}
+    \item Parâmetros Verdadeiros: $\beta = [-1.5, 2.0]$
+    \item Estimador Gaussiano (minimize): $\hat{\beta}_{Gauss} = [-1.482, 2.050]$
+    \item Estimador Gaussiano (forma fechada): $\hat{\beta}_{OLS} = [-1.482, 2.050]$
+    \item Estimador Laplaciano: $\hat{\beta}_{Lap} = [-1.498, 2.082]$
+\end{itemize}
+
+\textbf{Análise de Erro (Norma L2):}
+\begin{itemize}
+    \item Erro do Estimador Gaussiano: $0.053$
+    \item Erro do Estimador Laplaciano: $0.082$
+\end{itemize}
+
+Sem outliers, o estimador gaussiano (mínimos quadrados) tem melhor performance, como esperado quando os erros seguem distribuição normal.
+
+A Figura \ref{fig:regression_fits} compara visualmente os ajustes:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/3/regression_fits_comparison.png}
+    \caption{Comparação dos ajustes de regressão sem outliers}
+    \label{fig:regression_fits}
+\end{figure}
+
+\subsubsection{iii) Robustez a Outliers}
+
+Para testar a robustez, adicionamos um outlier extremo ao dataset:
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+# Regenerate data and add outlier
+y[80] = 10  # Extreme outlier
+\end{lstlisting}
+
+\textbf{Resultados com Outlier:}
+\begin{itemize}
+    \item Parâmetros Verdadeiros: $\beta = [-1.5, 2.0]$
+    \item Estimador Gaussiano com outlier: $\hat{\beta}_{Gauss} = [-1.378, 2.237]$
+    \item Estimador Laplaciano com outlier: $\hat{\beta}_{Lap} = [-1.498, 2.083]$
+\end{itemize}
+
+\textbf{Análise de Erro com Outlier (Norma L2):}
+\begin{itemize}
+    \item Erro do Estimador Gaussiano: $0.266$ (aumento de 5x)
+    \item Erro do Estimador Laplaciano: $0.083$ (praticamente inalterado)
+\end{itemize}
+
+A Figura \ref{fig:regression_fits_outlier} mostra o impacto do outlier:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/3/regression_fits_with_outlier.png}
+    \caption{Comparação dos ajustes de regressão com outlier}
+    \label{fig:regression_fits_outlier}
+\end{figure}
+
+\textbf{Conclusões:}
+\begin{enumerate}
+    \item \textbf{Eficiência}: Quando os erros são gaussianos e não há outliers, o estimador de mínimos quadrados (gaussiano) é mais eficiente.
+
+    \item \textbf{Robustez}: O estimador laplaciano é significativamente mais robusto a outliers, mantendo sua performance praticamente inalterada mesmo com outliers extremos.
+
+    \item \textbf{Trade-off}: Existe um trade-off entre eficiência (mínimos quadrados) e robustez (estimador laplaciano). A escolha depende das características esperadas dos dados.
+
+    \item \textbf{Aplicação Prática}: Em situações onde outliers são esperados ou a distribuição dos erros tem caudas pesadas, o estimador laplaciano (regressão com norma L1) é preferível.
+
+    \item \textbf{Impacto Dramático}: Um único outlier pode degradar significativamente a performance do estimador gaussiano (aumento de 5x no erro), enquanto o estimador laplaciano permanece praticamente inalterado.
+\end{enumerate}
 
 \newpage
 
