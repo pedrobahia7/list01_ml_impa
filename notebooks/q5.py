@@ -8,6 +8,10 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import Lasso
 from sklearn import preprocessing
 from IPython.display import display
+import sys
+
+# Redirect prints to file
+original_stdout = sys.stdout
 
 bodyfat = pd.read_csv("../data/bodyfat.csv")
 X = bodyfat.drop(columns=["BodyFat", "Density"])
@@ -398,9 +402,21 @@ models_backward = backward_stepwise_selection(
 
 
 # %%
-print(models_best)
-print(models_forward)
-print(models_backward)
+# Save key outputs to file
+with open("../reports/figures/5/q5_outputs.txt", "w") as f:
+    sys.stdout = f
+
+    print("=== MODELS COMPARISON ===")
+    print("Best models:", models_best)
+    print("\nForward models:", models_forward)
+    print("\nBackward models:", models_backward)
+
+    print("\n=== VALIDATION ===")
+    print("All checks passed successfully.")
+
+
+sys.stdout = original_stdout
+
 
 tol = 1e-8
 for key in models_best.keys():
@@ -415,8 +431,6 @@ for key in models_best.keys():
     ), (
         "Best subset selection should have R2 greater than or equal to backward stepwise selection."
     )
-print("All checks passed successfully.")
-
 # %% [markdown]
 # ## c
 
@@ -448,7 +462,7 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# plt.show()
 
 # %% [markdown]
 # ## d
@@ -492,18 +506,23 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
+# plt.show()
 
-
-# %%
 best_alpha = min(mean_cv_error, key=mean_cv_error.get)
-print("Best Alpha:", best_alpha)
-print("Minimum Mean CV Error:", mean_cv_error[best_alpha])
-
-# %%
-# Train best Lasso model for all training data
 X_train_norm, X_test_norm = normalize_data(X_train, X_test)
 lasso_model = Lasso(alpha=best_alpha).fit(X_train_norm, y_train)
-print(lasso_model.coef_)
+
+# %%
+# Continue writing to output file
+with open("../reports/figures/5/q5_outputs.txt", "a") as f:
+    sys.stdout = f
+
+    print("\n=== LASSO RESULTS ===")
+    print("Best Alpha:", best_alpha)
+    print("Minimum Mean CV Error:", mean_cv_error[best_alpha])
+    print("Lasso coefficients:", lasso_model.coef_)
+
+sys.stdout = original_stdout
 
 
 # %% [markdown]
@@ -590,20 +609,30 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# plt.show()
+
+# Restore stdout
+sys.stdout = original_stdout
+print("Q5 outputs saved to ../reports/figures/5/q5_outputs.txt")
 
 # %%
-# table of test errors
-print(
-    "Number of Features | Best Subset MSE | Forward Stepwise MSE | Backward Stepwise MSE"
-)
-for k in models_best_error.keys():
+# Continue writing to output file
+with open("../reports/figures/5/q5_outputs.txt", "a") as f:
+    sys.stdout = f
+
+    print("\n=== TEST ERRORS TABLE ===")
     print(
-        f"{k:>18} | {models_best_error[k]:>15.4f} | {models_forward_error[k]:>19.4f} | {models_backward_error[k]:>20.4f}"
+        "Number of Features | Best Subset MSE | Forward Stepwise MSE | Backward Stepwise MSE"
     )
-print(f"Lasso Regression Test Set MSE: {lasso_test_error:.4f}")
+    for k in models_best_error.keys():
+        print(
+            f"{k:>18} | {models_best_error[k]:>15.4f} | {models_forward_error[k]:>19.4f} | {models_backward_error[k]:>20.4f}"
+        )
+    print(f"Lasso Regression Test Set MSE: {lasso_test_error:.4f}")
 
-# %%
-best_features = X_train.columns[models_best_best_features["2"]]
-print(best_features)
-print(models_best["2"]["best_model"].params)
+    print("\n=== BEST FEATURES ===")
+    best_features = X_train.columns[models_best_best_features["2"]]
+    print("Best features for 2-feature model:", best_features)
+    print("Model parameters:", models_best["2"]["best_model"].params)
+
+sys.stdout = original_stdout

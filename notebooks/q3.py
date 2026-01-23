@@ -7,6 +7,10 @@
 import numpy as np
 import scipy
 import matplotlib.pyplot as plt
+import sys
+
+# Redirect prints to file
+original_stdout = sys.stdout
 
 
 def beta_ordinary(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
@@ -52,7 +56,7 @@ plt.legend()
 plt.savefig(
     "../reports/figures/3/data_scatter.png", dpi=300, bbox_inches="tight"
 )
-plt.show()
+# plt.show()
 
 
 # %%
@@ -66,7 +70,7 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# plt.show()
 
 
 # %%
@@ -80,7 +84,7 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# #plt.show()
 
 
 # %%
@@ -124,13 +128,20 @@ beta_hat_gaussian = calculate_beta_hat(X, y, "gaussian")
 beta_hat_gaussian_old_function = beta_ordinary(X, y)
 beta_hat_laplacian = calculate_beta_hat(X, y, "laplacian")
 
-# Print results
-print("True Coefficients:", beta)
-print("Coefficients (Gaussian with minimize):", beta_hat_gaussian)
-print(
-    "Coefficients (Gaussian closed form):", beta_hat_gaussian_old_function
-)
-print("Coefficients (Laplacian):", beta_hat_laplacian)
+# Save prints to file
+with open("../reports/figures/3/q3_outputs.txt", "w") as f:
+    sys.stdout = f
+
+    # Print results
+    print("True Coefficients:", beta)
+    print("Coefficients (Gaussian with minimize):", beta_hat_gaussian)
+    print(
+        "Coefficients (Gaussian closed form):",
+        beta_hat_gaussian_old_function,
+    )
+    print("Coefficients (Laplacian):", beta_hat_laplacian)
+
+sys.stdout = original_stdout
 
 # %% [markdown]
 # ### ii
@@ -160,13 +171,23 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# #plt.show()
 
 # %%
 error_gaussian = np.linalg.norm(beta - beta_hat_gaussian, ord=2)
 error_laplacian = np.linalg.norm(beta - beta_hat_laplacian, ord=2)
-print("Norma do erro do estimador Gaussian:", error_gaussian)
-print("Norma do erro do estimador Laplacian:", error_laplacian)
+# Continue saving prints to file
+
+with open("../reports/figures/3/q3_outputs.txt", "a") as f:
+    sys.stdout = f
+
+    error_gaussian = np.linalg.norm(beta - beta_hat_gaussian, ord=2)
+    error_laplacian = np.linalg.norm(beta - beta_hat_laplacian, ord=2)
+    print("\n=== ERROR ANALYSIS ===")
+    print("Norma do erro do estimador Gaussian:", error_gaussian)
+    print("Norma do erro do estimador Laplacian:", error_laplacian)
+
+sys.stdout = original_stdout
 
 # %% [markdown]
 # ### iii
@@ -189,16 +210,56 @@ beta_hat_gaussian_outlier = calculate_beta_hat(X, y, "gaussian")
 beta_hat_gaussian_old_outlier = beta_ordinary(X, y)
 beta_hat_laplacian_outlier = calculate_beta_hat(X, y, "laplacian")
 
-print("True Coefficients:", beta)
-print(
-    "Coefficients (Gaussian with minimize) with outlier:",
-    beta_hat_gaussian_outlier,
+error_gaussian_outlier = np.linalg.norm(
+    beta - beta_hat_gaussian_outlier, ord=2
 )
-print(
-    "Coefficients (Gaussian closed form) with outlier:",
-    beta_hat_gaussian_old_outlier,
+error_laplacian_outlier = np.linalg.norm(
+    beta - beta_hat_laplacian_outlier, ord=2
 )
-print("Coefficients (Laplacian) with outlier:", beta_hat_laplacian_outlier)
+# Continue saving prints to file
+with open("../reports/figures/3/q3_outputs.txt", "a") as f:
+    sys.stdout = f
+
+    print("\n=== WITH OUTLIER ===")
+    print("True Coefficients:", beta)
+    print(
+        "Coefficients (Gaussian with minimize) with outlier:",
+        beta_hat_gaussian_outlier,
+    )
+    print(
+        "Coefficients (Gaussian closed form) with outlier:",
+        beta_hat_gaussian_old_outlier,
+    )
+    print(
+        "Coefficients (Laplacian) with outlier:",
+        beta_hat_laplacian_outlier,
+    )
+
+    error_gaussian_outlier = np.linalg.norm(
+        beta - beta_hat_gaussian_outlier, ord=2
+    )
+    error_laplacian_outlier = np.linalg.norm(
+        beta - beta_hat_laplacian_outlier, ord=2
+    )
+
+    print("\n=== ERROR ANALYSIS WITH OUTLIER ===")
+    print(
+        "L2 Error of estimators with outlier (Gaussian):",
+        error_gaussian_outlier,
+    )
+    print(
+        "L2 Error of estimators with outlier (Laplacian):",
+        error_laplacian_outlier,
+    )
+
+sys.stdout = original_stdout
+print(
+    "Q3 outputs saved to ../reports/figures/3/q3_outputs.txt",
+    error_laplacian_outlier,
+)
+
+sys.stdout = original_stdout
+print("Q3 outputs saved to ../reports/figures/3/q3_outputs.txt")
 
 # %%
 error_gaussian_outlier = np.linalg.norm(
@@ -207,14 +268,14 @@ error_gaussian_outlier = np.linalg.norm(
 error_laplacian_outlier = np.linalg.norm(
     beta - beta_hat_laplacian_outlier, ord=2
 )
-print(
-    "L2 Error of estimators with outlier (Gaussian):",
-    error_gaussian_outlier,
-)
-print(
-    "L2 Error of estimators with outlier (Laplacian):",
-    error_laplacian_outlier,
-)
+# print(
+#     "L2 Error of estimators with outlier (Gaussian):",
+#     error_gaussian_outlier,
+# )
+# print(
+#     "L2 Error of estimators with outlier (Laplacian):",
+#     error_laplacian_outlier,
+# )
 
 # %%
 yhat_gaussina_outlier = X @ beta_hat_gaussian_outlier
@@ -248,4 +309,4 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# plt.show()

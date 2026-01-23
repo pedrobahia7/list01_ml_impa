@@ -10,6 +10,10 @@
 # %%
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+
+# Redirect prints to file
+original_stdout = sys.stdout
 
 n = 50
 Sigma = np.diag([10 ** ((i - 20) / 5) for i in range(1, n + 1)])
@@ -32,7 +36,7 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# plt.show()
 
 
 # %%
@@ -46,7 +50,7 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# plt.show()
 
 # %%
 plt.figure(figsize=(10, 6))
@@ -59,7 +63,7 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# plt.show()
 
 
 # %%
@@ -73,7 +77,7 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# plt.show()
 
 # %% [markdown]
 # ### ii
@@ -127,19 +131,25 @@ def beta_sigma(
 beta_hat_ordinary = beta_ordinary(X, y)
 beta_hat_sigma = beta_sigma(X, y, Sigma)
 
-print("True Beta:", beta)
-print("Ordinary Beta:", beta_hat_ordinary)
-print("Beta Sigma:", beta_hat_sigma)
+with open("../reports/figures/2/q2_outputs.txt", "w") as f:
+    sys.stdout = f
+    print("True Beta:", beta)
+    print("Ordinary Beta:", beta_hat_ordinary)
+    print("Beta Sigma:", beta_hat_sigma)
 
-print("\nNorma ao quadrado das diferenças:")
-print(
-    "True Beta and Ordinary Beta:",
-    np.linalg.norm(beta - beta_hat_ordinary, ord=2) ** 2,
-)
-print(
-    "True Beta and Beta Sigma:",
-    np.linalg.norm(beta - beta_hat_sigma, ord=2) ** 2,
-)
+    print("\nNorma ao quadrado das diferenças:")
+    print(
+        "True Beta and Ordinary Beta:",
+        np.linalg.norm(beta - beta_hat_ordinary, ord=2) ** 2,
+    )
+    print(
+        "True Beta and Beta Sigma:",
+        np.linalg.norm(beta - beta_hat_sigma, ord=2) ** 2,
+    )
+
+# Restore stdout
+sys.stdout = original_stdout
+print("Q2 outputs saved to ../reports/figures/2/q2_outputs.txt")
 
 # %% [markdown]
 # ### iii
@@ -196,11 +206,20 @@ beta1_hat_ordinary_p_value = p_value_ordinary_least_square(
     X, y, beta_hat_ordinary, 1
 )
 
-print("p-value of ordinary beta_0 =", beta0_hat_ordinary_p_value)
-print("p-value of ordinary beta_1 =", beta1_hat_ordinary_p_value)
-print(
-    "We can not discard the null hypothesis for both coefficients at 5% significance level."
-)
+# Continue writing to output file
+with open("../reports/figures/2/q2_outputs.txt", "a") as f:
+    sys.stdout = f
+
+    print("\n=== P-VALUES SECTION ===")
+    print("p-value of ordinary beta_0 =", beta0_hat_ordinary_p_value)
+    print("p-value of ordinary beta_1 =", beta1_hat_ordinary_p_value)
+    print(
+        "We can not discard the null hypothesis for both coefficients at 5% significance level."
+    )
+
+# Restore stdout
+sys.stdout = original_stdout
+sys.stdout = original_stdout
 
 # %%
 # Sanity check with statsmodels
@@ -241,9 +260,7 @@ def calculate_Z_sigma(
 
 
 Z = calculate_Z_sigma(X, Sigma, beta_hat_sigma, j=0)
-print("Z_sigma of Beta_0 =", Z)
-
-
+# print("Z_sigma of Beta_0 =", Z)
 # %% [markdown]
 # ### v
 
@@ -302,5 +319,19 @@ p_value_beta1_sigma = p_value_generalized_least_square(
     X, y, Sigma, beta_hat_sigma, 1
 )
 
-print(p_value_beta0_sigma)
-print(p_value_beta1_sigma)
+# print(p_value_beta0_sigma)
+# print(p_value_beta1_sigma)
+
+with open("../reports/figures/2/q2_outputs.txt", "a") as f:
+    sys.stdout = f
+    Z = calculate_Z_sigma(X, Sigma, beta_hat_sigma, j=0)
+
+    print("\n=== Z SIGMA SECTION ===")
+    print("Z_sigma of Beta_0 =", Z)
+
+    print("\n=== GENERALIZED P-VALUES SECTION ===")
+    print("p_value_beta0_sigma =", p_value_beta0_sigma)
+    print("p_value_beta1_sigma =", p_value_beta1_sigma)
+
+# Restore stdout
+sys.stdout = original_stdout

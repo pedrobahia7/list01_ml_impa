@@ -15,29 +15,30 @@ from sklearn.naive_bayes import GaussianNB as NB
 from sklearn.neighbors import KNeighborsClassifier as kNN
 from sklearn import preprocessing
 from IPython.display import display
+import sys
+
+# Redirect prints to file
+original_stdout = sys.stdout
 
 df = pd.read_csv("../data/soccer.csv")
 X = df.drop("target", axis=1)
 y = df[["target"]]
 
-
 X_train, y_train = X.iloc[:2560], y.iloc[:2560]
 X_test, y_test = X.iloc[2560:], y.iloc[2560:]
 
+# Save initial dataset info
+with open("../reports/figures/4/q4_outputs.txt", "w") as f:
+    sys.stdout = f
 
-print("Samples of X_train dataset", X_train.shape[0])
-print("Samples of X_test dataset", X_test.shape[0])
-print("Samples of y_train dataset", y_train.shape[0])
-print("Samples of y_test dataset", y_test.shape[0])
+    print("=== DATASET INFO ===")
+    print("Samples of X_train dataset", X_train.shape[0])
+    print("Samples of X_test dataset", X_test.shape[0])
+    print("Samples of y_train dataset", y_train.shape[0])
+    print("Samples of y_test dataset", y_test.shape[0])
 
-print("X_train:")
-display(X_train.head())
-print("y_train:")
-display(y_train.head())
-print("X_test:")
-display(X_test.head())
-print("y_test:")
-display(y_test.head())
+# Restore stdout
+sys.stdout = original_stdout
 
 # %%
 X_train = X_train.drop(["home_team", "away_team"], axis=1)
@@ -84,45 +85,59 @@ for model_type in models_to_test:
 
 # %%
 # Check if predictions are the same for both ravel and no ravel models
-for model in models_to_test:
-    print(model.__name__)
-    print(
-        "In-sample:",
-        (
-            results_dict[model.__name__]["in_sample_predictions"]
-            == results_dict[model.__name__][
-                "in_sample_predictions_no_ravel"
-            ]
-        ).all(),
-    )
-    print(
-        "Test predictions:",
-        (
-            results_dict[model.__name__]["test_predictions"]
-            == results_dict[model.__name__]["test_predictions_no_ravel"]
-        ).all(),
-    )
-    print("\n")
+with open("../reports/figures/4/q4_outputs.txt", "a") as f:
+    sys.stdout = f
+
+    print("\n=== MODEL PREDICTIONS COMPARISON ===")
+    for model in models_to_test:
+        print(model.__name__)
+        print(
+            "In-sample:",
+            (
+                results_dict[model.__name__]["in_sample_predictions"]
+                == results_dict[model.__name__][
+                    "in_sample_predictions_no_ravel"
+                ]
+            ).all(),
+        )
+        print(
+            "Test predictions:",
+            (
+                results_dict[model.__name__]["test_predictions"]
+                == results_dict[model.__name__][
+                    "test_predictions_no_ravel"
+                ]
+            ).all(),
+        )
+        print("\n")
+
+sys.stdout = original_stdout
 
 # %%
 # Check the coefficients of all models
-for model_name in models_to_test:
-    print(model_name.__name__)
-    print("\n")
-    model = results_dict[model_name.__name__]["model"]
+with open("../reports/figures/4/q4_outputs.txt", "a") as f:
+    sys.stdout = f
 
-    features = [
-        "coef_",
-        "intercept_",
-        "theta_",
-        "var_",
-        "covariance_",
-        "means_",
-    ]
-    for feature in features:
-        if hasattr(model, feature):
-            print(f"- {feature}:", getattr(model, feature), "\n")
-    print("\n", "-" * 100, "\n")
+    print("\n=== MODEL COEFFICIENTS ===")
+    for model_name in models_to_test:
+        print(model_name.__name__)
+        print("\n")
+        model = results_dict[model_name.__name__]["model"]
+
+        features = [
+            "coef_",
+            "intercept_",
+            "theta_",
+            "var_",
+            "covariance_",
+            "means_",
+        ]
+        for feature in features:
+            if hasattr(model, feature):
+                print(f"- {feature}:", getattr(model, feature), "\n")
+        print("\n", "-" * 100, "\n")
+
+sys.stdout = original_stdout
 
 # What is the covariance matrix learned by LDA and QDA?
 # What model NBGaussian corresponds to?
@@ -130,13 +145,24 @@ for model_name in models_to_test:
 # %%
 from sklearn.metrics import ConfusionMatrixDisplay
 
+with open("../reports/figures/4/q4_outputs.txt", "a") as f:
+    sys.stdout = f
+    print("\n=== CONFUSION MATRICES ===")
+
+sys.stdout = original_stdout
+
 for model_name in models_to_test:
     model_type_name = model_name.__name__
     in_sample_predictions = results_dict[model_type_name][
         "in_sample_predictions"
     ]
     test_predictions = results_dict[model_type_name]["test_predictions"]
-    print(f"Confusion Matrix for {model_type_name}:")
+
+    with open("../reports/figures/4/q4_outputs.txt", "a") as f:
+        sys.stdout = f
+        print(f"Confusion Matrix for {model_type_name}:")
+
+    sys.stdout = original_stdout
     ConfusionMatrixDisplay.from_predictions(y_train, in_sample_predictions)
     plt.title("In-sample prediction for " + model_type_name)
     plt.savefig(
@@ -144,7 +170,7 @@ for model_name in models_to_test:
         dpi=300,
         bbox_inches="tight",
     )
-    plt.show()
+    # plt.show()
     ConfusionMatrixDisplay.from_predictions(y_test, test_predictions)
     plt.title("Test prediction for " + model_type_name)
     plt.savefig(
@@ -152,8 +178,13 @@ for model_name in models_to_test:
         dpi=300,
         bbox_inches="tight",
     )
-    plt.show()
-    print("\n", "-" * 100, "\n")
+    # plt.show()
+
+    with open("../reports/figures/4/q4_outputs.txt", "a") as f:
+        sys.stdout = f
+        print("\n", "-" * 100, "\n")
+
+    sys.stdout = original_stdout
 
 # %% [markdown]
 # ## c
@@ -193,7 +224,7 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# plt.show()
 
 # %% [markdown]
 # ### d
@@ -244,4 +275,8 @@ plt.savefig(
     dpi=300,
     bbox_inches="tight",
 )
-plt.show()
+# plt.show()
+
+# Restore stdout
+sys.stdout = original_stdout
+print("Q4 outputs saved to ../reports/figures/4/q4_outputs.txt")
