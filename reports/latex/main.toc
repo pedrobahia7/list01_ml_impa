@@ -1,0 +1,39 @@
+\babel@toc {portuguese}{}\relax 
+\contentsline {section}{\numberline {1}Exercício 1a}{3}{}%
+\contentsline {section}{\numberline {2}Exercício 1b}{4}{}%
+\contentsline {section}{\numberline {3}Exercício 1c}{5}{}%
+\contentsline {section}{\numberline {4}Exercício 1d}{6}{}%
+\contentsline {section}{\numberline {5}Exercício 1e}{7}{}%
+\contentsline {section}{\numberline {6}Exercício 2d}{8}{}%
+\contentsline {subsection}{\numberline {6.1}i) Geração dos Dados Heteroscedásticos}{8}{}%
+\contentsline {subsection}{\numberline {6.2}ii) Estimadores de Mínimos Quadrados}{10}{}%
+\contentsline {subsection}{\numberline {6.3}iii) Cálculo de p-valores para Mínimos Quadrados Ordinários}{11}{}%
+\contentsline {subsection}{\numberline {6.4}iv) Estatística Z para o Estimador Generalizado}{11}{}%
+\contentsline {subsection}{\numberline {6.5}v) P-valores para o Estimador Generalizado}{12}{}%
+\contentsline {subsection}{\numberline {6.6}vi) Resultados Numéricos}{12}{}%
+\contentsline {section}{\numberline {7}Exercício 3f}{14}{}%
+\contentsline {subsection}{\numberline {7.1}i) Implementação dos Estimadores}{14}{}%
+\contentsline {subsection}{\numberline {7.2}ii) Comparação dos Estimadores}{16}{}%
+\contentsline {subsection}{\numberline {7.3}iii) Robustez a Outliers}{17}{}%
+\contentsline {section}{\numberline {8}Exercício 4a}{19}{}%
+\contentsline {subsection}{\numberline {8.1}Implementação dos Algoritmos de Classificação}{19}{}%
+\contentsline {section}{\numberline {9}Exercício 4b}{20}{}%
+\contentsline {subsection}{\numberline {9.1}Treinamento e Avaliação dos Modelos}{20}{}%
+\contentsline {subsection}{\numberline {9.2}Comparação de Performance dos Modelos}{20}{}%
+\contentsline {subsection}{\numberline {9.3}Análise Geral dos Algoritmos}{20}{}%
+\contentsline {subsection}{\numberline {9.4}Análise Específica do k-NN}{21}{}%
+\contentsline {subsection}{\numberline {9.5}Análise dos Coeficientes dos Modelos}{21}{}%
+\contentsline {subsection}{\numberline {9.6}Conclusões}{22}{}%
+\contentsline {section}{\numberline {10}Exercício 5b}{23}{}%
+\contentsline {subsection}{\numberline {10.1}Métodos de Seleção de Modelos}{23}{}%
+\contentsline {subsection}{\numberline {10.2}Preparação dos Dados}{23}{}%
+\contentsline {subsection}{\numberline {10.3}Implementação dos Algoritmos}{23}{}%
+\contentsline {section}{\numberline {11}Exercício 5c}{24}{}%
+\contentsline {subsection}{\numberline {11.1}Comparação dos Métodos - R²}{24}{}%
+\contentsline {section}{\numberline {12}Exercício 5d}{25}{}%
+\contentsline {subsection}{\numberline {12.1}Regressão Lasso com Validação Cruzada}{25}{}%
+\contentsline {subsection}{\numberline {12.2}Seleção do Parâmetro de Regularização}{25}{}%
+\contentsline {section}{\numberline {13}Exercício 5e}{27}{}%
+\contentsline {subsection}{\numberline {13.1}Comparação de Erros de Teste}{27}{}%
+\contentsline {subsection}{\numberline {13.2}Ranking dos Métodos}{27}{}%
+\contentsline {subsection}{\numberline {13.3}Análise dos Resultados}{28}{}%

@@ -1,0 +1,21 @@
+\section{Exercício 1e}
+
+\textbf{Verdadeira}
+
+A equação dada pela fórmula do intervalo de confiança:
+
+\[ \left[\hat{\beta}_j - 2\sqrt{\hat{\sigma}^2[(X^T X)^{-1}]_{jj}}, \hat{\beta}_j + 2\sqrt{\hat{\sigma}^2[(X^T X)^{-1}]_{jj}}\right] \]
+
+é derivada do fato de $\hat{\beta}$ ter uma distribuição normal. Isso vem do fato da hipótese de que o erro é normal.
+
+Caso ela não seja feita, os intervalos de confiança gerados via \textit{bootstrap} são mais adequados, pois são derivados a partir da distribuição inferida diretamente dos dados. Neste caso, a hipótese não-paramétrica é mais geral e preferível.
+
+\textbf{Justificativa:}
+
+\begin{itemize}
+    \item \textbf{Abordagem paramétrica}: Assume que os erros seguem distribuição normal, permitindo o uso da distribuição t de Student para construir intervalos de confiança analíticos.
+    \item \textbf{Abordagem não-paramétrica (bootstrap)}: Não assume distribuição específica dos erros, utilizando reamostragem dos dados para estimar a distribuição empírica dos parâmetros.
+    \item \textbf{Vantagem do bootstrap}: Mais robusto quando as suposições paramétricas são violadas, especialmente em casos de não-normalidade dos erros.
+\end{itemize}
+
+\newpage
