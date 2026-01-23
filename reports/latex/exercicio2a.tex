@@ -1,19 +1,21 @@
 \section{Exercício 2a}
 
-Dado que a variância de $\varepsilon$ é $\Sigma = \begin{pmatrix}
+Dado que a variância de $\varepsilon$ é:
+
+$\Sigma = \begin{pmatrix}
         \text{Cov}(\varepsilon_1,\varepsilon_1) & \text{Cov}(\varepsilon_1,\varepsilon_2) & \cdots & \text{Cov}(\varepsilon_1,\varepsilon_n) \\
         \text{Cov}(\varepsilon_2,\varepsilon_1) & \text{Cov}(\varepsilon_2,\varepsilon_2) & \cdots & \text{Cov}(\varepsilon_2,\varepsilon_n) \\
         \vdots                                  & \vdots                                  & \ddots & \vdots                                  \\
         \text{Cov}(\varepsilon_n,\varepsilon_1) & \text{Cov}(\varepsilon_n,\varepsilon_2) & \cdots & \text{Cov}(\varepsilon_n,\varepsilon_n)
     \end{pmatrix}$
-
+\\
 Tal que $\text{Cov}(\varepsilon_i,\varepsilon_j) = \mathbb{E}[(\varepsilon_i - \mu_i)(\varepsilon_j - \mu_j)]$.
 
 Assumir a independência dos erros implica que $\text{Cov}(\varepsilon_i,\varepsilon_j) = 0$ para $i \neq j$. Isso resulta em uma matriz de covariância diagonal,
-onde os elementos fora da diagonal são todos zero.
+os elementos fora da diagonal são todos zero.
 
-Já assumir a homocedasticidade implica que a variância dos erros é constante, ou seja, \[ \text{Var}(\varepsilon_i) = \sigma^2 \] para todo $i$.
-ou seja, $\text{Var}(\varepsilon_i) = \sigma^2$ para todo $i$. Isso significa que os elementos na diagonal da matriz de covariância são todos iguais a $\sigma^2$.
+Já assumir a homocedasticidade implica que a variância dos erros é constante, ou seja, \[ \text{Var}(\varepsilon_i) = \text{Var}(\varepsilon_j) = \sigma^2, para todo i,j\]
+Ou seja, $\text{Var}(\varepsilon_i) = \sigma^2$ para todo $i$. Assim, os elementos na diagonal da matriz de covariância são todos iguais a $\sigma^2$.
 
 Portanto, sob as suposições de independência e homocedasticidade dos erros, a matriz de covariância $\Sigma$ assume a forma:
 \[
