@@ -14,6 +14,7 @@ from sklearn.linear_model import LogisticRegression as LR
 from sklearn.naive_bayes import GaussianNB as NB
 from sklearn.neighbors import KNeighborsClassifier as kNN
 from sklearn import preprocessing
+from IPython.display import display
 
 df = pd.read_csv("../data/soccer.csv")
 X = df.drop("target", axis=1)
@@ -138,9 +139,19 @@ for model_name in models_to_test:
     print(f"Confusion Matrix for {model_type_name}:")
     ConfusionMatrixDisplay.from_predictions(y_train, in_sample_predictions)
     plt.title("In-sample prediction for " + model_type_name)
+    plt.savefig(
+        f"../reports/figures/4/confusion_matrix_insample_{model_type_name.lower()}.png",
+        dpi=300,
+        bbox_inches="tight",
+    )
     plt.show()
     ConfusionMatrixDisplay.from_predictions(y_test, test_predictions)
     plt.title("Test prediction for " + model_type_name)
+    plt.savefig(
+        f"../reports/figures/4/confusion_matrix_test_{model_type_name.lower()}.png",
+        dpi=300,
+        bbox_inches="tight",
+    )
     plt.show()
     print("\n", "-" * 100, "\n")
 
@@ -177,6 +188,11 @@ plt.ylabel("Erro de Teste")
 # move legend outside the plot
 plt.legend(loc="center left", bbox_to_anchor=(1, 0.5))
 plt.grid()
+plt.savefig(
+    "../reports/figures/4/models_error_comparison.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()
 
 # %% [markdown]
@@ -223,4 +239,9 @@ plt.ylabel("Erro de Teste")
 # move legend outside the plot
 plt.legend(loc="center left", bbox_to_anchor=(1, 0.5))
 plt.grid()
+plt.savefig(
+    "../reports/figures/4/knn_error_comparison.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()

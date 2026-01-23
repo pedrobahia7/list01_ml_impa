@@ -27,6 +27,11 @@ plt.xlabel("X")
 plt.ylabel("y")
 plt.title("Heteroscedastic Data")
 plt.legend()
+plt.savefig(
+    "../reports/figures/2/heteroscedastic_data_scatter.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()
 
 
@@ -36,6 +41,11 @@ plt.bar(range(1, n + 1), np.diag(Sigma))
 plt.xlabel("Index")
 plt.ylabel("Variance")
 plt.title("Diagonal Elements of Sigma")
+plt.savefig(
+    "../reports/figures/2/sigma_diagonal_variances.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()
 
 # %%
@@ -43,7 +53,12 @@ plt.figure(figsize=(10, 6))
 plt.hist(epsilon, bins=20, color="gray", edgecolor="black")
 plt.xlabel("Value")
 plt.ylabel("Frequency")
-plt.title("Histogram of Erros")
+plt.title("Histogram of Errors")
+plt.savefig(
+    "../reports/figures/2/errors_histogram.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()
 
 
@@ -53,6 +68,11 @@ plt.bar(range(1, n + 1), epsilon)
 plt.xlabel("Index")
 plt.ylabel("Error")
 plt.title("Values of Errors")
+plt.savefig(
+    "../reports/figures/2/error_values_by_index.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()
 
 # %% [markdown]
@@ -111,14 +131,14 @@ print("True Beta:", beta)
 print("Ordinary Beta:", beta_hat_ordinary)
 print("Beta Sigma:", beta_hat_sigma)
 
-print("\nNorms of the differences:")
+print("\nNorma ao quadrado das diferenças:")
 print(
     "True Beta and Ordinary Beta:",
-    np.linalg.norm(beta - beta_hat_ordinary, ord=2),
+    np.linalg.norm(beta - beta_hat_ordinary, ord=2) ** 2,
 )
 print(
     "True Beta and Beta Sigma:",
-    np.linalg.norm(beta - beta_hat_sigma, ord=2),
+    np.linalg.norm(beta - beta_hat_sigma, ord=2) ** 2,
 )
 
 # %% [markdown]

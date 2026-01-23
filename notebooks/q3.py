@@ -49,6 +49,9 @@ plt.xlabel("X")
 plt.ylabel("y")
 plt.title("Data")
 plt.legend()
+plt.savefig(
+    "../reports/figures/3/data_scatter.png", dpi=300, bbox_inches="tight"
+)
 plt.show()
 
 
@@ -57,7 +60,12 @@ plt.figure(figsize=(10, 6))
 plt.hist(epsilon, bins=20, color="gray", edgecolor="black")
 plt.xlabel("Value")
 plt.ylabel("Frequency")
-plt.title("Histogram of Erros")
+plt.title("Histogram of Errors")
+plt.savefig(
+    "../reports/figures/3/errors_histogram.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()
 
 
@@ -67,6 +75,11 @@ plt.bar(range(1, n + 1), epsilon)
 plt.xlabel("Index")
 plt.ylabel("Error")
 plt.title("Values of Errors")
+plt.savefig(
+    "../reports/figures/3/error_values_by_index.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()
 
 
@@ -142,13 +155,18 @@ plt.title("Regression Fits")
 plt.legend()
 plt.xlabel("X")
 plt.ylabel("y")
+plt.savefig(
+    "../reports/figures/3/regression_fits_comparison.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()
 
 # %%
 error_gaussian = np.linalg.norm(beta - beta_hat_gaussian, ord=2)
 error_laplacian = np.linalg.norm(beta - beta_hat_laplacian, ord=2)
-print("L2 Error of estimators (Gaussian):", error_gaussian)
-print("L2 Error of estimators (Laplacian):", error_laplacian)
+print("Norma do erro do estimador Gaussian:", error_gaussian)
+print("Norma do erro do estimador Laplacian:", error_laplacian)
 
 # %% [markdown]
 # ### iii
@@ -225,4 +243,9 @@ plt.title("Regression Fits")
 plt.legend()
 plt.xlabel("X")
 plt.ylabel("y")
+plt.savefig(
+    "../reports/figures/3/regression_fits_with_outlier.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()

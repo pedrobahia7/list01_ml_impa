@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split, KFold
 import matplotlib.pyplot as plt
 from sklearn.linear_model import Lasso
 from sklearn import preprocessing
+from IPython.display import display
 
 bodyfat = pd.read_csv("../data/bodyfat.csv")
 X = bodyfat.drop(columns=["BodyFat", "Density"])
@@ -442,6 +443,11 @@ plt.ylabel("R-squared")
 plt.title("Model Selection Methods Comparison")
 plt.legend(loc="center left", bbox_to_anchor=(1, 0.5))
 plt.grid()
+plt.savefig(
+    "../reports/figures/5/model_selection_methods_r2_comparison.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()
 
 # %% [markdown]
@@ -481,6 +487,11 @@ plt.xscale("log")
 plt.xlabel("Alpha")
 plt.ylabel("Mean CV Error (MSE)")
 plt.title("Lasso Regression: Mean CV Error vs Alpha")
+plt.savefig(
+    "../reports/figures/5/lasso_cv_error_vs_alpha.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 
 
 # %%
@@ -489,7 +500,7 @@ print("Best Alpha:", best_alpha)
 print("Minimum Mean CV Error:", mean_cv_error[best_alpha])
 
 # %%
-# Train best Lasso model
+# Train best Lasso model for all training data
 X_train_norm, X_test_norm = normalize_data(X_train, X_test)
 lasso_model = Lasso(alpha=best_alpha).fit(X_train_norm, y_train)
 print(lasso_model.coef_)
@@ -574,6 +585,11 @@ plt.ylabel("Test Set MSE")
 plt.title("Model Selection Methods Test Set Error Comparison")
 plt.legend(loc="center left", bbox_to_anchor=(1, 0.5))
 plt.grid()
+plt.savefig(
+    "../reports/figures/5/model_selection_test_error_comparison.png",
+    dpi=300,
+    bbox_inches="tight",
+)
 plt.show()
 
 # %%
