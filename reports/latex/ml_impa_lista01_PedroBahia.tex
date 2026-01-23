@@ -7,6 +7,8 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{float}
+\usepackage{float}
 
 \title{Lista 01 de Machine Learning}
 \author{Pedro Barbosa Bahia}
@@ -116,7 +118,7 @@ y = X @ beta + epsilon
 
 A Figura \ref{fig:heteroscedastic_data} mostra os dados gerados com heterocedasticidade:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/2/heteroscedastic_data_scatter.png}
     \caption{Dados heteroscedásticos gerados}
@@ -125,7 +127,7 @@ A Figura \ref{fig:heteroscedastic_data} mostra os dados gerados com heterocedast
 
 A Figura \ref{fig:sigma_variances} mostra os elementos diagonais da matriz $\Sigma$, evidenciando a heterocedasticidade:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/2/sigma_diagonal_variances.png}
     \caption{Elementos diagonais da matriz $\Sigma$}
@@ -134,14 +136,14 @@ A Figura \ref{fig:sigma_variances} mostra os elementos diagonais da matriz $\Sig
 
 As Figuras \ref{fig:errors_hist} e \ref{fig:errors_values} mostram a distribuição e valores dos erros:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/2/errors_histogram.png}
     \caption{Histograma dos erros}
     \label{fig:errors_hist}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/2/error_values_by_index.png}
     \caption{Valores dos erros por índice}
@@ -362,7 +364,7 @@ y = X @ beta + np.random.normal(0, 0.3, 100)
 
 A Figura \ref{fig:data_scatter_q3} mostra os dados gerados:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/3/data_scatter.png}
     \caption{Dados sintéticos para comparação dos estimadores}
@@ -371,14 +373,14 @@ A Figura \ref{fig:data_scatter_q3} mostra os dados gerados:
 
 As Figuras \ref{fig:errors_hist_q3} e \ref{fig:errors_values_q3} mostram a análise dos erros:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/3/errors_histogram.png}
     \caption{Histograma dos erros}
     \label{fig:errors_hist_q3}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/3/error_values_by_index.png}
     \caption{Valores dos erros por índice}
@@ -407,7 +409,7 @@ Sem outliers, o estimador gaussiano (mínimos quadrados) tem melhor performance,
 
 A Figura \ref{fig:regression_fits} compara visualmente os ajustes:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/3/regression_fits_comparison.png}
     \caption{Comparação dos ajustes de regressão sem outliers}
@@ -438,7 +440,7 @@ y[80] = 10  # Extreme outlier
 
 A Figura \ref{fig:regression_fits_outlier} mostra o impacto do outlier:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/3/regression_fits_with_outlier.png}
     \caption{Comparação dos ajustes de regressão com outlier}
@@ -544,7 +546,7 @@ for model_type in models_to_test:
 
 A Figura \ref{fig:models_comparison} compara os erros de treinamento e teste para todos os modelos:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/4/models_error_comparison.png}
     \caption{Comparação dos erros de treinamento vs teste para diferentes modelos}
@@ -567,7 +569,7 @@ for model_name in models_to_test:
 
 A Figura \ref{fig:knn_comparison} mostra como a performance do k-NN varia com diferentes valores de k:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/4/knn_error_comparison.png}
     \caption{Erros do k-NN para diferentes números de vizinhos (K=1 a K=10)}
@@ -805,7 +807,7 @@ def backward_stepwise_selection(X_train: np.ndarray, Y_train: np.ndarray) -> dic
 
 A Figura \ref{fig:model_selection_r2} compara o desempenho dos três métodos em termos de R²:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{../figures/5/model_selection_methods_r2_comparison.png}
     \caption{Comparação dos métodos de seleção de modelos - R² vs Número de Features}
@@ -854,7 +856,7 @@ best_alpha = min(mean_cv_error, key=mean_cv_error.get)
 
 A Figura \ref{fig:lasso_cv} mostra a curva de validação cruzada para o Lasso:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/5/lasso_cv_error_vs_alpha.png}
     \caption{Lasso Regression: Erro de Validação Cruzada vs Parâmetro Alpha}
@@ -873,16 +875,16 @@ A Figura \ref{fig:lasso_cv} mostra a curva de validação cruzada para o Lasso:
 
 A Figura \ref{fig:test_errors} compara o erro no conjunto de teste para todos os métodos:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{../figures/5/model_selection_test_error_comparison.png}
-    \caption{Comparação dos erros no conjunto de teste para diferentes métodos}
+    \caption{Compara\c{c}\~ao dos erros no conjunto de teste para diferentes métodos}
     \label{fig:test_errors}
 \end{figure}
 
 \subsection{Resultados Numéricos}
 
-\begin{table}[h]
+\begin{table}[H]
     \centering
     \begin{tabular}{|c|c|c|c|}
         \hline

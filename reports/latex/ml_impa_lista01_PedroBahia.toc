@@ -6,22 +6,22 @@
 \contentsline {section}{\numberline {5}Exercício 2}{7}{section.5}%
 \contentsline {subsection}{\numberline {5.1}Parte d}{7}{subsection.5.1}%
 \contentsline {subsubsection}{\numberline {5.1.1}i) Geração dos Dados Heteroscedásticos}{7}{subsubsection.5.1.1}%
-\contentsline {subsubsection}{\numberline {5.1.2}ii) Estimadores de Mínimos Quadrados}{7}{subsubsection.5.1.2}%
-\contentsline {subsubsection}{\numberline {5.1.3}iii) Cálculo de p-valores para Mínimos Quadrados Ordinários}{9}{subsubsection.5.1.3}%
+\contentsline {subsubsection}{\numberline {5.1.2}ii) Estimadores de Mínimos Quadrados}{9}{subsubsection.5.1.2}%
+\contentsline {subsubsection}{\numberline {5.1.3}iii) Cálculo de p-valores para Mínimos Quadrados Ordinários}{10}{subsubsection.5.1.3}%
 \contentsline {subsubsection}{\numberline {5.1.4}iv) Estatística Z para o Estimador Generalizado}{10}{subsubsection.5.1.4}%
 \contentsline {subsubsection}{\numberline {5.1.5}v) P-valores para o Estimador Generalizado}{10}{subsubsection.5.1.5}%
 \contentsline {subsubsection}{\numberline {5.1.6}vi) Resultados Numéricos}{11}{subsubsection.5.1.6}%
 \contentsline {section}{\numberline {6}Exercício 3}{13}{section.6}%
 \contentsline {subsection}{\numberline {6.1}Parte f}{13}{subsection.6.1}%
 \contentsline {subsubsection}{\numberline {6.1.1}i) Implementação dos Estimadores}{13}{subsubsection.6.1.1}%
-\contentsline {subsubsection}{\numberline {6.1.2}ii) Comparação dos Estimadores}{14}{subsubsection.6.1.2}%
-\contentsline {subsubsection}{\numberline {6.1.3}iii) Robustez a Outliers}{14}{subsubsection.6.1.3}%
-\contentsline {section}{\numberline {7}Exercício 4a}{17}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Implementação dos Algoritmos de Classificação}{17}{subsection.7.1}%
-\contentsline {section}{\numberline {8}Exercício 4b}{20}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Treinamento e Avaliação dos Modelos}{20}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Comparação de Performance dos Modelos}{20}{subsection.8.2}%
-\contentsline {subsubsection}{\numberline {8.2.1}Análise Geral dos Algoritmos}{20}{subsubsection.8.2.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}ii) Comparação dos Estimadores}{15}{subsubsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.3}iii) Robustez a Outliers}{16}{subsubsection.6.1.3}%
+\contentsline {section}{\numberline {7}Exercício 4a}{18}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Implementação dos Algoritmos de Classificação}{18}{subsection.7.1}%
+\contentsline {section}{\numberline {8}Exercício 4b}{19}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Treinamento e Avaliação dos Modelos}{19}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Comparação de Performance dos Modelos}{19}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}Análise Geral dos Algoritmos}{19}{subsubsection.8.2.1}%
 \contentsline {subsubsection}{\numberline {8.2.2}Análise Específica do k-NN}{20}{subsubsection.8.2.2}%
 \contentsline {subsection}{\numberline {8.3}Análise dos Coeficientes dos Modelos}{21}{subsection.8.3}%
 \contentsline {subsection}{\numberline {8.4}Conclusões}{22}{subsection.8.4}%
@@ -32,7 +32,7 @@
 \contentsline {subsection}{\numberline {9.2}Comparação dos Métodos - R²}{26}{subsection.9.2}%
 \contentsline {subsection}{\numberline {9.3}Regressão Lasso com Validação Cruzada}{27}{subsection.9.3}%
 \contentsline {subsubsection}{\numberline {9.3.1}Seleção do Parâmetro de Regularização}{27}{subsubsection.9.3.1}%
-\contentsline {subsection}{\numberline {9.4}Comparação no Conjunto de Teste}{27}{subsection.9.4}%
-\contentsline {subsection}{\numberline {9.5}Resultados Numéricos}{28}{subsection.9.5}%
-\contentsline {subsection}{\numberline {9.6}Análise do Modelo de 2 Features}{28}{subsection.9.6}%
-\contentsline {subsection}{\numberline {9.7}Conclusões}{29}{subsection.9.7}%
+\contentsline {subsection}{\numberline {9.4}Comparação no Conjunto de Teste}{28}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}Resultados Numéricos}{29}{subsection.9.5}%
+\contentsline {subsection}{\numberline {9.6}Análise do Modelo de 2 Features}{29}{subsection.9.6}%
+\contentsline {subsection}{\numberline {9.7}Conclusões}{30}{subsection.9.7}%
