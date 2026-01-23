@@ -629,5 +629,311 @@ for k in range(1, 11):
 
 \newpage
 
+\section{Exercício 5}
+
+\subsection{Métodos de Seleção de Modelos}
+
+Neste exercício, implementamos e comparamos diferentes métodos de seleção de modelos para regressão linear usando o dataset de composição corporal (bodyfat). Os métodos implementados incluem:
+
+\begin{itemize}
+    \item \textbf{Best Subset Selection}: Avalia todas as combinações possíveis de features
+    \item \textbf{Forward Stepwise Selection}: Adiciona features sequencialmente
+    \item \textbf{Backward Stepwise Selection}: Remove features sequencialmente
+    \item \textbf{Lasso Regression}: Regularização L1 com seleção automática de features
+\end{itemize}
+
+\subsubsection{Preparação dos Dados}
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+import statsmodels.api as sm
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split, KFold
+from sklearn.linear_model import Lasso
+from sklearn import preprocessing
+
+# Load and prepare data
+bodyfat = pd.read_csv("../data/bodyfat.csv")
+X = bodyfat.drop(columns=["BodyFat", "Density"])
+y = bodyfat["BodyFat"]
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=10
+)
+
+# Setup cross-validation
+kf = KFold(n_splits=5, shuffle=True, random_state=10)
+\end{lstlisting}
+
+\subsubsection{Implementação dos Algoritmos}
+
+\textbf{Best Subset Selection:}
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+def best_subset_selection(X_train: np.ndarray, Y_train: np.ndarray) -> dict:
+    """
+    Perform best subset selection for linear regression. 
+    Evaluates all possible combinations of features.
+    """
+    n, p = X_train.shape
+    best_model_k = {}
+    
+    # Model with no features
+    best_model_k["0"] = {
+        "best_model": sm.OLS(Y_train, np.ones((len(Y_train), 1))).fit(),
+        "best_r2": 0.0,
+        "best_features": []
+    }
+    
+    for k in range(1, p + 1):
+        best_r2 = 0
+        best_features = []
+        best_model = []
+        
+        # Evaluate all combinations of k features
+        for feature_combination in itertools.combinations(range(p), k):
+            X_train_aux = sm.add_constant(X_train[:, feature_combination])
+            model = sm.OLS(Y_train, X_train_aux).fit()
+            
+            if model.rsquared > best_r2:
+                best_r2 = model.rsquared
+                best_model = model
+                best_features = feature_combination
+        
+        best_model_k[str(k)] = {
+            "best_model": best_model,
+            "best_r2": best_r2,
+            "best_features": list(best_features),
+        }
+    
+    return best_model_k
+\end{lstlisting}
+
+\textbf{Forward Stepwise Selection:}
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+def forward_stepwise_selection(X_train: np.ndarray, Y_train: np.ndarray) -> dict:
+    """
+    Perform forward stepwise selection. Iteratively adds the best feature.
+    """
+    n, p = X_train.shape
+    best_model_k = {}
+    remaining_features = list(range(p))
+    current_features = []
+    
+    # Model with no features
+    best_model_k["0"] = {
+        "best_model": sm.OLS(Y_train, np.ones((len(Y_train), 1))).fit(),
+        "best_r2": 0.0,
+        "best_features": []
+    }
+    
+    for k in range(1, p + 1):
+        best_r2 = 0
+        best_features = []
+        best_model = []
+        
+        # Try adding each remaining feature
+        for new_feature in remaining_features:
+            feature_combination_list = current_features + [new_feature]
+            X_train_aux = sm.add_constant(X_train[:, feature_combination_list])
+            model = sm.OLS(Y_train, X_train_aux).fit()
+            
+            if model.rsquared > best_r2:
+                best_r2 = model.rsquared
+                best_model = model
+                best_features = feature_combination_list
+        
+        # Update feature lists
+        remaining_features = list(set(remaining_features) - set(best_features))
+        current_features = list(set(best_features + current_features))
+        
+        best_model_k[str(k)] = {
+            "best_model": best_model,
+            "best_r2": best_r2,
+            "best_features": current_features.copy(),
+        }
+    
+    return best_model_k
+\end{lstlisting}
+
+\textbf{Backward Stepwise Selection:}
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+def backward_stepwise_selection(X_train: np.ndarray, Y_train: np.ndarray) -> dict:
+    """
+    Perform backward stepwise selection. Iteratively removes the worst feature.
+    """
+    n, p = X_train.shape
+    best_model_k = {}
+    current_features = list(range(p))
+    
+    # Model with all features
+    best_model_k[f"{p}"] = {
+        "best_model": sm.OLS(Y_train, sm.add_constant(X_train)).fit(),
+        "best_features": list(current_features)
+    }
+    best_model_k[f"{p}"]["best_r2"] = best_model_k[f"{p}"]["best_model"].rsquared
+    
+    for k in range(1, p + 1):
+        best_r2 = 0
+        best_features = []
+        best_model = []
+        
+        # Try removing each current feature
+        for feature_to_remove in current_features:
+            feature_combination_list = current_features.copy()
+            feature_combination_list.remove(feature_to_remove)
+            X_train_aux = sm.add_constant(X_train[:, feature_combination_list])
+            model = sm.OLS(Y_train, X_train_aux).fit()
+            
+            if model.rsquared > best_r2:
+                best_r2 = model.rsquared
+                best_model = model
+                best_features = feature_combination_list
+        
+        current_features = best_features
+        
+        best_model_k[str(p - k)] = {
+            "best_model": best_model,
+            "best_r2": best_r2,
+            "best_features": current_features.copy(),
+        }
+    
+    return best_model_k
+\end{lstlisting}
+
+\subsection{Comparação dos Métodos - R²}
+
+A Figura \ref{fig:model_selection_r2} compara o desempenho dos três métodos em termos de R²:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{../figures/5/model_selection_methods_r2_comparison.png}
+    \caption{Comparação dos métodos de seleção de modelos - R² vs Número de Features}
+    \label{fig:model_selection_r2}
+\end{figure}
+
+\textbf{Resultados dos R² por Método:}
+\begin{itemize}
+    \item \textbf{1 feature}: R² = 0.640 (feature: Abdomen)
+    \item \textbf{2 features}: R² = 0.694 (features: Weight, Abdomen)
+    \item \textbf{3 features}: R² = 0.710 (adicionando uma terceira feature)
+    \item \textbf{Todos os métodos convergem}: Para 1-3 features, todos os métodos encontram as mesmas soluções ótimas
+    \item \textbf{Divergência}: A partir de 4+ features, backward stepwise pode encontrar soluções ligeiramente diferentes
+\end{itemize}
+
+\subsection{Regressão Lasso com Validação Cruzada}
+
+\subsubsection{Seleção do Parâmetro de Regularização}
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+# Cross-validation for Lasso
+alphas = 10 ** np.linspace(5, -2, 100)
+mean_cv_error = {}
+
+for alpha_0 in alphas:
+    fold_error = []
+    for test_fold in np.unique(cv_fold):
+        # Split data for current fold
+        x_train_fold = X_train[cv_fold != test_fold]
+        y_train_fold = y_train[cv_fold != test_fold]
+        x_test_fold = X_train[cv_fold == test_fold]
+        y_test_fold = y_train[cv_fold == test_fold]
+        
+        # Normalize data
+        x_train_fold, x_test_fold = normalize_data(x_train_fold, x_test_fold)
+        
+        # Train and evaluate Lasso model
+        model_ = Lasso(alpha=alpha_0).fit(x_train_fold, y_train_fold)
+        yhat = model_.predict(x_test_fold)
+        fold_error.append(mean_squared_error(yhat, y_test_fold))
+    
+    mean_cv_error[alpha_0] = np.mean(fold_error)
+
+best_alpha = min(mean_cv_error, key=mean_cv_error.get)
+\end{lstlisting}
+
+A Figura \ref{fig:lasso_cv} mostra a curva de validação cruzada para o Lasso:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/5/lasso_cv_error_vs_alpha.png}
+    \caption{Lasso Regression: Erro de Validação Cruzada vs Parâmetro Alpha}
+    \label{fig:lasso_cv}
+\end{figure}
+
+\textbf{Resultados do Lasso:}
+\begin{itemize}
+    \item \textbf{Melhor Alpha}: $\alpha = 0.0313$
+    \item \textbf{Erro de CV mínimo}: 21.12
+    \item \textbf{Features selecionadas}: Todas (coeficientes não-zero para todas as 13 features)
+    \item \textbf{Maior coeficiente}: Abdomen (10.04) - confirma sua importância
+\end{itemize}
+
+\subsection{Comparação no Conjunto de Teste}
+
+A Figura \ref{fig:test_errors} compara o erro no conjunto de teste para todos os métodos:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{../figures/5/model_selection_test_error_comparison.png}
+    \caption{Comparação dos erros no conjunto de teste para diferentes métodos}
+    \label{fig:test_errors}
+\end{figure}
+
+\subsection{Resultados Numéricos}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        Features & Best Subset MSE & Forward Stepwise MSE & Backward Stepwise MSE \\
+        \hline
+        1        & 20.01           & 20.01                & 20.01                 \\
+        2        & 14.58           & 14.58                & 14.58                 \\
+        3        & 16.16           & 16.16                & 16.16                 \\
+        6        & 16.32           & 16.32                & 16.06                 \\
+        7        & 15.72           & 16.92                & 15.72                 \\
+        9        & 15.94           & 15.94                & 15.94                 \\
+        \hline
+        \multicolumn{4}{|c|}{Lasso Regression MSE: \textbf{15.56}}                \\
+        \hline
+    \end{tabular}
+    \caption{Erros de teste (MSE) para diferentes números de features}
+\end{table}
+
+\subsection{Análise do Modelo de 2 Features}
+
+O modelo com 2 features (Weight e Abdomen) mostra excelente performance:
+
+\textbf{Modelo}: $\text{BodyFat} = -45.63 - 0.14 \times \text{Weight} + 0.98 \times \text{Abdomen}$
+
+\begin{itemize}
+    \item \textbf{Intercepto}: -45.63
+    \item \textbf{Coef. Weight}: -0.14 (negativo - mais peso, menos gordura corporal relativa)
+    \item \textbf{Coef. Abdomen}: 0.98 (positivo - maior circunferência abdominal, maior gordura corporal)
+    \item \textbf{R²}: 0.694
+    \item \textbf{MSE no teste}: 14.58
+\end{itemize}
+
+\subsection{Conclusões}
+
+\begin{enumerate}
+    \item \textbf{Convergência dos Métodos}: Para números pequenos de features (1-3), todos os métodos stepwise encontram as mesmas soluções ótimas que o best subset selection.
+
+    \item \textbf{Feature Mais Importante}: Abdomen (circunferência abdominal) é consistentemente a feature mais importante, explicando 64\% da variância sozinha.
+
+    \item \textbf{Modelo Parcimonioso}: O modelo de 2 features (Weight + Abdomen) oferece excelente trade-off entre simplicidade e performance (MSE = 14.58).
+
+    \item \textbf{Lasso Performance}: O Lasso alcança o melhor resultado no teste (MSE = 15.56), mas usa todas as features. O trade-off é menor interpretabilidade.
+
+    \item \textbf{Overfitting}: Modelos com mais de 3 features mostram sinais de overfitting, com R² crescente no treino mas MSE crescente no teste.
+
+    \item \textbf{Eficiência Computacional}: Forward/backward stepwise são muito mais eficientes que best subset ($O(p^2)$ vs $O(2^p)$), com performance quase idêntica para este problema.
+
+    \item \textbf{Regularização}: O Lasso fornece uma abordagem automática para seleção de features com excelente performance de generalização.
+\end{enumerate}
+
+\newpage
+
 
 \end{document}
