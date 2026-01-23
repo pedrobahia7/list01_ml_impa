@@ -1,0 +1,298 @@
+\documentclass[11pt]{article}
+
+\usepackage{fullpage}
+\usepackage[brazilian]{babel}
+\usepackage{url, hyperref}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\title{Lista X de Machine Learning}
+\author{Pedro Barbosa Bahia}
+\date{IMPA, Verão 2026}
+
+\begin{document}
+
+% Configure Python syntax highlighting
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    commentstyle=\color{green},
+    numberstyle=\tiny\color{gray},
+    numbers=left,
+    numbersep=5pt,
+    frame=single,
+    breaklines=true,
+    breakatwhitespace=true,
+    showstringspaces=false,
+    tabsize=4
+}
+
+\maketitle
+
+\tableofcontents
+\pagebreak
+
+\section{Exercício 1a}
+
+\textbf{Falso.} A proximidade entre $\varepsilon_{\text{treino}}$ e $\varepsilon_{\text{teste}}$ pode dar informações sobre o ajuste do modelo aos dados de treino.
+
+Caso $\varepsilon_{\text{treino}}$ seja próximo ao $\varepsilon_{\text{teste}}$, o modelo pode estar \textit{subajustado}, de modo que aumentar a complexidade poderia melhorar sua performance ainda mais.
+
+De maneira análoga, caso o $\varepsilon_{\text{treino}}$ seja menor que o $\varepsilon_{\text{teste}}$, o modelo estará \textit{sobreajustado}, com redução de complexidade podendo resultar em melhoras.
+
+\newpage
+
+\section{Exercício 1b}
+
+\textbf{Verdadeiro.} A distribuição $t$ surge do fato de $\mathcal{N}(0,1)$ dividido por $\sqrt{\frac{K}{N}}$ ter distribuição $t$ com $N$ graus de liberdade.
+
+No nosso caso, $\mathcal{N}(0,1)$ é a distribuição de $\frac{\hat{\beta_1} - \beta_1}{\text{Var}(\hat{\beta_1})}$. Isso é normal, pois $\hat{\beta_1}$ é normal.
+
+Isso, por sua vez, vem do fato de $\hat{\beta}$ ser resultante de uma combinação linear de gaussianas, no caso, $\varepsilon \sim \mathcal{N}(0, \sigma^2)$.
+
+\newpage
+
+\section{Exercício 1c}
+\textbf{Falso.}
+Considerando a classe $k = 0$ como as transações fraudulentas, o objetivo do modelo pode ser interpretado como:
+
+\[
+    \sum_{y_i \in k=0} \mathbf{1}_{[y_i \neq \hat{y_i}]} = 0
+\]
+
+Não há restrições entretanto em relação às transações legítimas, ou seja, para:
+\[
+    \sum_{y_i \in k=1} \mathbf{1}_{[y_i \neq \hat{y_i}]}
+\]
+
+Dado um modelo de acurácia $(1- \varepsilon)$, têm-se que
+\[ 1- \frac{1}{n} \left[\sum_{y_i \in k=0} \mathbf{1}_{[y_i \neq \hat{y_i}]} + \sum_{y_i \in k=1} \mathbf{1}_{[y_i \neq \hat{y_i}]}\right] = 1 - \varepsilon \]
+
+Dado uma acurácia \[1 - epsilon\], há infinitos valores de $\sum_{y_i \in k=0} \mathbf{1}_{[y_i \neq \hat{y_i}]}$ e $\sum_{y_i \in k=1} \mathbf{1}_{[y_i \neq \hat{y_i}]}$ que resolvem essa equação e, portanto, o valor da acurácia não é informativo para o erro individual das classes.
+Assim, apenas com a acurácias dos Modelos 1 e 2 não é possível determinar qual modelo tem menor erro em transações fraudulentas.
+
+
+\newpage
+
+\section{Exercício 1d}
+\textbf{Falso}
+
+
+\[ L_{ridge}(\beta) = (Y - Yhat)^T(Y - \hat{Y}) + \lambda \beta^T \beta \]
+\[ L_{ridge}(\beta)  = (Y - X\beta)^T(Y - X\beta) + \lambda \beta^T \beta \]
+
+\[L_{linear}(\beta) = (Y - Yhat)^T(Y - \hat{Y})\]
+
+Caso $\lambda = 0$, temos que $L_{ridge}(\beta) = L_{linear}(\beta)$.
+Logo, a performance de ambos os modelos será a mesma. Então para o case de $\lambda = 0$, a afirmação é falsa.
+
+\newpage
+
+
+\section{Exercício 2}
+
+\subsection{Parte d}
+
+\subsubsection{i) Geração dos Dados Heteroscedásticos}
+
+Primeiramente, geramos os dados com heterocedasticidade usando a matriz de covariância $\Sigma$ diagonal:
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+import numpy as np
+import matplotlib.pyplot as plt
+
+n = 50
+Sigma = np.diag([10 ** ((i - 20) / 5) for i in range(1, n + 1)])
+np.random.seed(0)
+X = np.array([np.ones(n), np.random.normal(0, 1, n)]).T
+beta = np.array([1, 0.25])
+epsilon = np.random.multivariate_normal(np.zeros(n), Sigma)
+y = X @ beta + epsilon
+\end{lstlisting}
+
+A Figura \ref{fig:heteroscedastic_data} mostra os dados gerados com heterocedasticidade:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/2/heteroscedastic_data_scatter.png}
+    \caption{Dados heteroscedásticos gerados}
+    \label{fig:heteroscedastic_data}
+\end{figure}
+
+A Figura \ref{fig:sigma_variances} mostra os elementos diagonais da matriz $\Sigma$, evidenciando a heterocedasticidade:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/2/sigma_diagonal_variances.png}
+    \caption{Elementos diagonais da matriz $\Sigma$}
+    \label{fig:sigma_variances}
+\end{figure}
+
+As Figuras \ref{fig:errors_hist} e \ref{fig:errors_values} mostram a distribuição e valores dos erros:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/2/errors_histogram.png}
+    \caption{Histograma dos erros}
+    \label{fig:errors_hist}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/2/error_values_by_index.png}
+    \caption{Valores dos erros por índice}
+    \label{fig:errors_values}
+\end{figure}
+
+\subsubsection{ii) Estimadores de Mínimos Quadrados}
+
+Implementamos tanto o estimador de mínimos quadrados ordinários quanto o estimador generalizado que considera a matriz de covariância $\Sigma$:
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+def beta_ordinary(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+    """
+    Compute the ordinary least squares estimator.
+    """
+    beta = np.linalg.inv(X.T @ X) @ X.T @ Y
+    return beta
+
+def beta_sigma(X: np.ndarray, Y: np.ndarray, Sigma: np.ndarray) -> np.ndarray:
+    """
+    Compute the generalized least squares estimator considering 
+    the covariance matrix Sigma.
+    """
+    Sigma_1 = np.linalg.inv(Sigma)
+    beta = np.linalg.inv(X.T @ Sigma_1 @ X) @ X.T @ Sigma_1 @ Y
+    return beta
+
+beta_hat_ordinary = beta_ordinary(X, y)
+beta_hat_sigma = beta_sigma(X, y, Sigma)
+
+print("True Beta:", beta)
+print("Ordinary Beta:", beta_hat_ordinary)
+print("Beta Sigma:", beta_hat_sigma)
+\end{lstlisting}
+
+Os resultados mostram que o estimador generalizado (que considera $\Sigma$) tem menor erro em relação aos parâmetros verdadeiros.
+
+\subsubsection{iii) Cálculo de p-valores para Mínimos Quadrados Ordinários}
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+def p_value_ordinary_least_square(X: np.ndarray, Y: np.ndarray, 
+                                 beta_ordinary_hat: np.ndarray, j: int) -> float:
+    """
+    Compute the p-value for the j-th coefficient of the ordinary 
+    least squares estimator.
+    """
+    Y_hat = X @ beta_ordinary_hat
+    n, p = X.shape
+    dof = n - p
+    errors = Y - Y_hat
+    beta_j = beta_ordinary_hat[j]
+    
+    # Z statistic
+    x_j_var = (np.linalg.inv(X.T @ X))[j, j]
+    Z = beta_j / np.sqrt(x_j_var)
+    
+    # Estimate of sigma^2
+    sigma2_hat = (1 / dof) * (errors.T @ errors)
+    
+    # t statistic and p-value
+    t_statistics = Z / np.sqrt(sigma2_hat)
+    t_statistics = np.abs(t_statistics)
+    p_value = 2 * (1 - scipy.stats.t.cdf(t_statistics, dof))
+    
+    return p_value
+\end{lstlisting}
+
+\subsubsection{iv) Estatística Z para o Estimador Generalizado}
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+def calculate_Z_sigma(X: np.ndarray, Sigma: np.ndarray, 
+                     Beta_sigma: np.ndarray, j: int) -> float:
+    """
+    Compute the Z statistic for the j-th coefficient of the 
+    generalized least squares estimator.
+    """
+    Sigma_inv = np.linalg.inv(Sigma)
+    den = np.linalg.inv(X.T @ Sigma_inv @ X)
+    den = den[j, j]
+    Z = Beta_sigma[j] / (np.sqrt(den))
+    return Z
+\end{lstlisting}
+
+\subsubsection{v) P-valores para o Estimador Generalizado}
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+def p_value_generalized_least_square(X: np.ndarray, Y: np.ndarray,
+                                    Sigma: np.ndarray, 
+                                    beta_ordinary_hat: np.ndarray, j: int) -> float:
+    """
+    Compute the p-value for the j-th coefficient of the 
+    generalized least squares estimator.
+    """
+    Y_hat = X @ beta_ordinary_hat
+    n, p = X.shape
+    dof = n - p
+    errors = Y - Y_hat
+    
+    # Z statistic
+    Z_sigma = calculate_Z_sigma(X, Sigma, beta_hat_sigma, j)
+    
+    # Estimate of sigma^2
+    inverse_Sigma = np.linalg.inv(Sigma)
+    sigma2_hat = (1 / dof) * (errors.T @ inverse_Sigma @ errors)
+    
+    # t statistic and p-value
+    t_statistics = Z_sigma / np.sqrt(sigma2_hat)
+    t_statistics = np.abs(t_statistics)
+    p_value = 2 * (1 - scipy.stats.t.cdf(t_statistics, dof))
+    
+    return p_value
+\end{lstlisting}
+
+Esta implementação permite comparar os dois estimadores e calcular a significância estatística dos coeficientes em ambos os casos.
+
+\newpage
+
+
+\section{Exercício 3a}
+Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+
+\newpage
+
+\section{Exercício 3b}
+Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+
+\newpage
+
+\section{Exercício 3c}
+Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+
+\newpage
+
+\section{Exercício 3d}
+Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+
+\newpage
+
+\section{Exercício 3e}
+Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+
+\newpage
+
+
+\section{Exercício 4a}
+Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+
+\newpage
+
+\section{Exercício 4b}
+Insira sua solução aqui, incluindo qualquer conta, código ou figura relevante para a sua solução.
+
+
+\end{document}
