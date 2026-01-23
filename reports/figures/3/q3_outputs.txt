@@ -1,0 +1,18 @@
+True Coefficients: [-1.5  2. ]
+Coefficients (Gaussian with minimize): [-1.48182515  2.04962669]
+Coefficients (Gaussian closed form): [-1.48182514  2.0496267 ]
+Coefficients (Laplacian): [-1.4978794   2.08212298]
+
+=== ERROR ANALYSIS ===
+Norma do erro do estimador Gaussian: 0.0528500998831934
+Norma do erro do estimador Laplacian: 0.08215035729023573
+
+=== WITH OUTLIER ===
+True Coefficients: [-1.5  2. ]
+Coefficients (Gaussian with minimize) with outlier: [-1.3784814   2.23687319]
+Coefficients (Gaussian closed form) with outlier: [-1.37848139  2.2368733 ]
+Coefficients (Laplacian) with outlier: [-1.49766215  2.08258059]
+
+=== ERROR ANALYSIS WITH OUTLIER ===
+L2 Error of estimators with outlier (Gaussian): 0.26622486020169933
+L2 Error of estimators with outlier (Laplacian): 0.08261367841483944

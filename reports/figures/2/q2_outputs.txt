@@ -1,0 +1,19 @@
+True Beta: [1.   0.25]
+Ordinary Beta: [-34.46344733   6.94756948]
+Beta Sigma: [1.01885254 0.24436202]
+
+Norma ao quadrado das diferenças:
+True Beta and Ordinary Beta: 1302.513533772031
+True Beta and Beta Sigma: 0.0003872050262530096
+
+=== P-VALUES SECTION ===
+p-value of ordinary beta_0 = 0.1543599725443663
+p-value of ordinary beta_1 = 0.7421602010802748
+We can not discard the null hypothesis for both coefficients at 5% significance level.
+
+=== Z SIGMA SECTION ===
+Z_sigma of Beta_0 = 73.67232264052195
+
+=== GENERALIZED P-VALUES SECTION ===
+p_value_beta0_sigma = 0.0
+p_value_beta1_sigma = 0.0
