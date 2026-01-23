@@ -1,0 +1,20 @@
+\section{Exercício 1c}
+\textbf{Falso.}
+Considerando a classe $k = 0$ como as transações fraudulentas, o objetivo do modelo pode ser interpretado como:
+
+\[
+    \sum_{y_i \in k=0} \mathbf{1}_{[y_i \neq \hat{y_i}]} = 0
+\]
+
+Não há restrições entretanto em relação às transações legítimas, ou seja, para:
+\[
+    \sum_{y_i \in k=1} \mathbf{1}_{[y_i \neq \hat{y_i}]}
+\]
+
+Dado um modelo de acurácia $(1- \varepsilon)$, têm-se que
+\[ 1- \frac{1}{n} \left[\sum_{y_i \in k=0} \mathbf{1}_{[y_i \neq \hat{y_i}]} + \sum_{y_i \in k=1} \mathbf{1}_{[y_i \neq \hat{y_i}]}\right] = 1 - \varepsilon \]
+
+Dado uma acurácia \[1 - epsilon\], há infinitos valores de $\sum_{y_i \in k=0} \mathbf{1}_{[y_i \neq \hat{y_i}]}$ e $\sum_{y_i \in k=1} \mathbf{1}_{[y_i \neq \hat{y_i}]}$ que resolvem essa equação e, portanto, o valor da acurácia não é informativo para o erro individual das classes.
+Assim, apenas com a acurácias dos Modelos 1 e 2 não é possível determinar qual modelo tem menor erro em transações fraudulentas.
+
+\newpage

@@ -1,0 +1,212 @@
+\section{Exercício 2d}
+
+\subsection{i) Geração dos Dados Heteroscedásticos}
+
+Primeiramente, geramos os dados com heterocedasticidade usando a matriz de covariância $\Sigma$ diagonal:
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+import numpy as np
+import matplotlib.pyplot as plt
+
+n = 50
+Sigma = np.diag([10 ** ((i - 20) / 5) for i in range(1, n + 1)])
+np.random.seed(0)
+X = np.array([np.ones(n), np.random.normal(0, 1, n)]).T
+beta = np.array([1, 0.25])
+epsilon = np.random.multivariate_normal(np.zeros(n), Sigma)
+y = X @ beta + epsilon
+\end{lstlisting}
+
+A Figura \ref{fig:heteroscedastic_data} mostra os dados gerados com heterocedasticidade:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/2/heteroscedastic_data_scatter.png}
+    \caption{Dados heteroscedásticos gerados}
+    \label{fig:heteroscedastic_data}
+\end{figure}
+
+A Figura \ref{fig:sigma_variances} mostra os elementos diagonais da matriz $\Sigma$, evidenciando a heterocedasticidade:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/2/sigma_diagonal_variances.png}
+    \caption{Elementos diagonais da matriz $\Sigma$}
+    \label{fig:sigma_variances}
+\end{figure}
+
+As Figuras \ref{fig:errors_hist} e \ref{fig:errors_values} mostram a distribuição e valores dos erros:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/2/errors_histogram.png}
+    \caption{Histograma dos erros}
+    \label{fig:errors_hist}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/2/error_values_by_index.png}
+    \caption{Valores dos erros por índice}
+    \label{fig:errors_values}
+\end{figure}
+
+\subsection{ii) Estimadores de Mínimos Quadrados}
+
+Implementamos tanto o estimador de mínimos quadrados ordinários quanto o estimador generalizado que considera a matriz de covariância $\Sigma$:
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+def beta_ordinary(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+    """
+    Compute the ordinary least squares estimator.
+    """
+    beta = np.linalg.inv(X.T @ X) @ X.T @ Y
+    return beta
+
+def beta_sigma(X: np.ndarray, Y: np.ndarray, Sigma: np.ndarray) -> np.ndarray:
+    """
+    Compute the generalized least squares estimator considering 
+    the covariance matrix Sigma.
+    """
+    Sigma_1 = np.linalg.inv(Sigma)
+    beta = np.linalg.inv(X.T @ Sigma_1 @ X) @ X.T @ Sigma_1 @ Y
+    return beta
+
+beta_hat_ordinary = beta_ordinary(X, y)
+beta_hat_sigma = beta_sigma(X, y, Sigma)
+
+print("True Beta:", beta)
+print("Ordinary Beta:", beta_hat_ordinary)
+print("Beta Sigma:", beta_hat_sigma)
+\end{lstlisting}
+
+Os resultados mostram que o estimador generalizado (que considera $\Sigma$) tem menor erro em relação aos parâmetros verdadeiros.
+
+\subsection{iii) Cálculo de p-valores para Mínimos Quadrados Ordinários}
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+def p_value_ordinary_least_square(X: np.ndarray, Y: np.ndarray, 
+                                 beta_ordinary_hat: np.ndarray, j: int) -> float:
+    """
+    Compute the p-value for the j-th coefficient of the ordinary 
+    least squares estimator.
+    """
+    Y_hat = X @ beta_ordinary_hat
+    n, p = X.shape
+    dof = n - p
+    errors = Y - Y_hat
+    beta_j = beta_ordinary_hat[j]
+    
+    # Z statistic
+    x_j_var = (np.linalg.inv(X.T @ X))[j, j]
+    Z = beta_j / np.sqrt(x_j_var)
+    
+    # Estimate of sigma^2
+    sigma2_hat = (1 / dof) * (errors.T @ errors)
+    
+    # t statistic and p-value
+    t_statistics = Z / np.sqrt(sigma2_hat)
+    t_statistics = np.abs(t_statistics)
+    p_value = 2 * (1 - scipy.stats.t.cdf(t_statistics, dof))
+    
+    return p_value
+\end{lstlisting}
+
+\subsection{iv) Estatística Z para o Estimador Generalizado}
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+def calculate_Z_sigma(X: np.ndarray, Sigma: np.ndarray, 
+                     Beta_sigma: np.ndarray, j: int) -> float:
+    """
+    Compute the Z statistic for the j-th coefficient of the 
+    generalized least squares estimator.
+    """
+    Sigma_inv = np.linalg.inv(Sigma)
+    den = np.linalg.inv(X.T @ Sigma_inv @ X)
+    den = den[j, j]
+    Z = Beta_sigma[j] / (np.sqrt(den))
+    return Z
+\end{lstlisting}
+
+\subsection{v) P-valores para o Estimador Generalizado}
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+def p_value_generalized_least_square(X: np.ndarray, Y: np.ndarray,
+                                    Sigma: np.ndarray, 
+                                    beta_ordinary_hat: np.ndarray, j: int) -> float:
+    """
+    Compute the p-value for the j-th coefficient of the 
+    generalized least squares estimator.
+    """
+    Y_hat = X @ beta_ordinary_hat
+    n, p = X.shape
+    dof = n - p
+    errors = Y - Y_hat
+    
+    # Z statistic
+    Z_sigma = calculate_Z_sigma(X, Sigma, beta_hat_sigma, j)
+    
+    # Estimate of sigma^2
+    inverse_Sigma = np.linalg.inv(Sigma)
+    sigma2_hat = (1 / dof) * (errors.T @ inverse_Sigma @ errors)
+    
+    # t statistic and p-value
+    t_statistics = Z_sigma / np.sqrt(sigma2_hat)
+    t_statistics = np.abs(t_statistics)
+    p_value = 2 * (1 - scipy.stats.t.cdf(t_statistics, dof))
+    
+    return p_value
+\end{lstlisting}
+
+Esta implementação permite comparar os dois estimadores e calcular a significância estatística dos coeficientes em ambos os casos.
+
+\subsection{vi) Resultados Numéricos}
+
+Executando o código implementado, obtemos os seguintes resultados:
+
+\textbf{Comparação dos Estimadores:}
+\begin{itemize}
+    \item Parâmetros Verdadeiros: $\beta = [1.0, 0.25]$
+    \item Estimador Ordinário: $\hat{\beta}_{OLS} = [-34.463, 6.948]$
+    \item Estimador Generalizado: $\hat{\beta}_{\Sigma} = [1.019, 0.244]$
+\end{itemize}
+
+\textbf{Erro Quadrático dos Estimadores:}
+\begin{itemize}
+    \item $\|\beta - \hat{\beta}_{OLS}\|_2^2 = 1302.51$
+    \item $\|\beta - \hat{\beta}_{\Sigma}\|_2^2 = 0.000387$
+\end{itemize}
+
+O estimador generalizado apresenta erro dramaticamente menor (cerca de 3.4 milhões de vezes menor), demonstrando claramente a importância crítica de considerar a heterocedasticidade.
+
+\textbf{Testes de Hipótese - Mínimos Quadrados Ordinários:}
+\begin{itemize}
+    \item p-valor para $\beta_0$: 0.1544
+    \item p-valor para $\beta_1$: 0.7422
+\end{itemize}
+
+Com nível de significância de 5\%, não podemos rejeitar a hipótese nula para ambos os coeficientes usando o estimador ordinário.
+
+\textbf{Testes de Hipótese - Estimador Generalizado:}
+\begin{itemize}
+    \item Estatística Z para $\beta_0$: 73.67
+    \item p-valor para $\beta_0$: $< 10^{-15}$ (praticamente zero)
+    \item p-valor para $\beta_1$: $< 10^{-15}$ (praticamente zero)
+\end{itemize}
+
+Com o estimador generalizado, ambos os coeficientes são altamente significativos estatisticamente, evidenciando a superior eficiência deste método.
+
+\textbf{Conclusões:}
+\begin{enumerate}
+    \item O estimador de mínimos quadrados ordinários (OLS) falha completamente na presença de heterocedasticidade severa, fornecendo estimativas muito distantes dos valores verdadeiros ($\hat{\beta}_0 = -34.46$ vs $\beta_0 = 1.0$).
+
+    \item O estimador generalizado (GLS) é extremamente superior, com erro cerca de 3.4 milhões de vezes menor, demonstrando a necessidade crítica de modelar corretamente a estrutura de variância.
+
+    \item Os testes de significância baseados no OLS são não-confiáveis, falhando em detectar coeficientes que são claramente diferentes de zero.
+
+    \item O estimador GLS fornece testes estatísticos apropriados, detectando corretamente a significância dos parâmetros.
+
+    \item Este exemplo ilustra dramaticamente por que a correção para heterocedasticidade não é apenas uma melhoria técnica, mas uma necessidade fundamental para análise estatística válida.
+\end{enumerate}
+
+\newpage

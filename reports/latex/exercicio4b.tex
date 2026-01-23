@@ -1,0 +1,70 @@
+\section{Exercício 4b}
+
+\subsection{Treinamento e Avaliação dos Modelos}
+
+Implementamos um loop para treinar todos os modelos e comparar suas performances:
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+models_to_test = [LDA, QDA, LR, NB, kNN]
+results_dict = {}
+
+for model_type in models_to_test:
+    model_name = model_type.__name__
+    params = {}
+    if model_type in [LDA, QDA]:
+        params.update({"store_covariance": True})
+    
+    results_dict[model_name] = {}
+    cls = model_type(**params)
+    cls.fit(X_train, y_train.values.ravel())
+    
+    # Store predictions and model
+    results_dict[model_name]["in_sample_predictions"] = cls.predict(X_train)
+    results_dict[model_name]["test_predictions"] = cls.predict(X_test)
+    results_dict[model_name]["model"] = cls
+\end{lstlisting}
+
+\subsection{Comparação de Performance dos Modelos}
+
+\subsection{Análise Geral dos Algoritmos}
+
+A Figura \ref{fig:models_comparison} compara os erros de treinamento e teste para todos os modelos:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/4/models_error_comparison.png}
+    \caption{Comparação dos erros de treinamento vs teste para diferentes modelos}
+    \label{fig:models_comparison}
+\end{figure}
+
+\subsection{Análise Específica do k-NN}
+
+A Figura \ref{fig:knn_comparison} mostra como a performance do k-NN varia com diferentes valores de k:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/4/knn_error_comparison.png}
+    \caption{Erros do k-NN para diferentes números de vizinhos (K=1 a K=10)}
+    \label{fig:knn_comparison}
+\end{figure}
+
+\subsection{Análise dos Coeficientes dos Modelos}
+
+\textbf{Linear Discriminant Analysis (LDA):}
+\begin{itemize}
+    \item Coeficientes: $[0.81, -0.26, -0.026, 0.017, 0.23, 0.069, 0.37, -0.050, -0.083, 0.043, 0.047]$
+    \item Intercepto: $0.109$
+    \item Utiliza covariância comum entre as classes
+\end{itemize}
+
+\subsection{Conclusões}
+
+\begin{enumerate}
+    \item \textbf{Performance Geral}: Todos os modelos apresentaram performance similar, sugerindo que o problema tem estrutura linear bem definida.
+
+    \item \textbf{Overfitting}: O k-NN com K=1 mostra clear overfitting (erro de treino muito baixo, erro de teste alto), enquanto valores maiores de K generalizam melhor.
+
+    \item \textbf{k-NN}: A performance otimizada ocorre com K entre 3-7, balanceando bias e variância.
+\end{enumerate}
+
+\newpage

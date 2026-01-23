@@ -1,0 +1,51 @@
+\section{Exercício 5d}
+
+\subsection{Regressão Lasso com Validação Cruzada}
+
+\subsection{Seleção do Parâmetro de Regularização}
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+# Cross-validation for Lasso
+alphas = 10 ** np.linspace(5, -2, 100)
+mean_cv_error = {}
+
+for alpha_0 in alphas:
+    fold_error = []
+    for test_fold in np.unique(cv_fold):
+        # Split data for current fold
+        x_train_fold = X_train[cv_fold != test_fold]
+        y_train_fold = y_train[cv_fold != test_fold]
+        x_test_fold = X_train[cv_fold == test_fold]
+        y_test_fold = y_train[cv_fold == test_fold]
+        
+        # Normalize data
+        x_train_fold, x_test_fold = normalize_data(x_train_fold, x_test_fold)
+        
+        # Train and evaluate Lasso model
+        model_ = Lasso(alpha=alpha_0).fit(x_train_fold, y_train_fold)
+        yhat = model_.predict(x_test_fold)
+        fold_error.append(mean_squared_error(yhat, y_test_fold))
+    
+    mean_cv_error[alpha_0] = np.mean(fold_error)
+
+best_alpha = min(mean_cv_error, key=mean_cv_error.get)
+\end{lstlisting}
+
+A Figura \ref{fig:lasso_cv} mostra a curva de validação cruzada para o Lasso:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/5/lasso_cv_error_vs_alpha.png}
+    \caption{Lasso Regression: Erro de Validação Cruzada vs Parâmetro Alpha}
+    \label{fig:lasso_cv}
+\end{figure}
+
+\textbf{Resultados do Lasso:}
+\begin{itemize}
+    \item \textbf{Melhor Alpha}: $\alpha = 0.0313$
+    \item \textbf{Erro de CV mínimo}: 21.12
+    \item \textbf{Features selecionadas}: Todas (coeficientes não-zero para todas as 13 features)
+    \item \textbf{Maior coeficiente}: Abdomen (10.04) - confirma sua importância
+\end{itemize}
+
+\newpage

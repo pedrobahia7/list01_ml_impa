@@ -1,0 +1,53 @@
+\section{Exercício 5e}
+
+\subsection{Comparação de Erros de Teste}
+
+Finalmente, avaliamos o desempenho de todos os métodos no conjunto de teste:
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+# Test error evaluation for all methods
+test_results = {
+    'Ridge': mean_squared_error(ridge_pred, y_test),
+    'Backward Selection': mean_squared_error(backward_pred, y_test),
+    'Subset Selection': mean_squared_error(subset_pred, y_test),
+    'Lasso': mean_squared_error(lasso_pred, y_test)
+}
+
+print("Test Error Results:")
+for method, error in test_results.items():
+    print(f"{method}: {error:.4f}")
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/5/model_selection_test_error_comparison.png}
+    \caption{Comparação dos Erros de Teste para Todos os Métodos}
+    \label{fig:test_errors}
+\end{figure}
+
+\subsection{Ranking dos Métodos}
+
+Com base nos erros de teste obtidos, o ranking dos métodos em ordem crescente de erro (melhor para pior) é:
+
+\begin{enumerate}
+    \item \textbf{Backward Selection}: 22.76 - \textcolor{green}{Melhor performance}
+    \item \textbf{Subset Selection}: 23.03 - Segundo melhor
+    \item \textbf{Ridge Regression}: 23.18 - Terceiro lugar
+    \item \textbf{Lasso Regression}: 23.51 - Quarto lugar
+\end{enumerate}
+
+\subsection{Análise dos Resultados}
+
+\textbf{Principais observações:}
+
+1. **Backward Selection** obteve o menor erro de teste, sugerindo que a seleção automática de variáveis baseada em critérios estatísticos foi eficaz para este problema.
+
+2. **Subset Selection** teve performance muito próxima, confirmando que o modelo com 4 variáveis capturou bem os padrões dos dados.
+
+3. **Ridge Regression** manteve todas as variáveis mas com penalização, resultando em performance ligeiramente inferior.
+
+4. **Lasso Regression**, apesar de sua capacidade de seleção de variáveis, não performou tão bem quanto os métodos de seleção baseados em critérios estatísticos.
+
+5. A diferença entre o melhor e pior método foi de apenas 0.75 unidades de erro, indicando que todos os métodos são competitivos para este dataset.
+
+\newpage

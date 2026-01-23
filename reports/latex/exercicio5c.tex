@@ -1,0 +1,23 @@
+\section{Exercício 5c}
+
+\subsection{Comparação dos Métodos - R²}
+
+A Figura \ref{fig:model_selection_r2} compara o desempenho dos três métodos em termos de R²:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{../figures/5/model_selection_methods_r2_comparison.png}
+    \caption{Comparação dos métodos de seleção de modelos - R² vs Número de Features}
+    \label{fig:model_selection_r2}
+\end{figure}
+
+\textbf{Resultados dos R² por Método:}
+\begin{itemize}
+    \item \textbf{1 feature}: R² = 0.640 (feature: Abdomen)
+    \item \textbf{2 features}: R² = 0.694 (features: Weight, Abdomen)
+    \item \textbf{3 features}: R² = 0.710 (adicionando uma terceira feature)
+    \item \textbf{Todos os métodos convergem}: Para 1-3 features, todos os métodos encontram as mesmas soluções ótimas
+    \item \textbf{Divergência}: A partir de 4+ features, backward stepwise pode encontrar soluções ligeiramente diferentes
+\end{itemize}
+
+\newpage
