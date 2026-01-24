@@ -1,8 +1,8 @@
 \section{Exercício 2d}
 
-\subsection{i) Geração dos Dados Heteroscedásticos}
+\subsection{i}
 
-Primeiramente, geramos os dados com heterocedasticidade usando a matriz de covariância $\Sigma$ diagonal:
+Os dados com heterocedasticidade usando a matriz de covariância $\Sigma$ diagonal:
 
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
 import numpy as np
@@ -51,9 +51,10 @@ As Figuras \ref{fig:errors_hist} e \ref{fig:errors_values} mostram a distribuiç
     \label{fig:errors_values}
 \end{figure}
 
-\subsection{ii) Estimadores de Mínimos Quadrados}
+\subsection{ii}
 
-Implementamos tanto o estimador de mínimos quadrados ordinários quanto o estimador generalizado que considera a matriz de covariância $\Sigma$:
+Tanto estimador de mínimos quadrados ordinários quanto o estimador generalizado que
+considera a matriz de covariância $\Sigma$ foram implementados com o código à seguir:
 
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
 def beta_ordinary(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
@@ -74,15 +75,24 @@ def beta_sigma(X: np.ndarray, Y: np.ndarray, Sigma: np.ndarray) -> np.ndarray:
 
 beta_hat_ordinary = beta_ordinary(X, y)
 beta_hat_sigma = beta_sigma(X, y, Sigma)
-
-print("True Beta:", beta)
-print("Ordinary Beta:", beta_hat_ordinary)
-print("Beta Sigma:", beta_hat_sigma)
 \end{lstlisting}
 
-Os resultados mostram que o estimador generalizado (que considera $\Sigma$) tem menor erro em relação aos parâmetros verdadeiros.
+\textbf{Comparação dos Estimadores:}
+\begin{itemize}
+    \item Parâmetros Verdadeiros: $\beta = [1.0, 0.25]$
+    \item Estimador Ordinário: $\hat{\beta}_{OLS} = [-34.463, 6.948]$
+    \item Estimador Generalizado: $\hat{\beta}_{\Sigma} = [1.019, 0.244]$
+\end{itemize}
 
-\subsection{iii) Cálculo de p-valores para Mínimos Quadrados Ordinários}
+\textbf{Erro Quadrático dos Estimadores:}
+\begin{itemize}
+    \item $\|\beta - \hat{\beta}_{OLS}\|_2^2 = 1302.51$
+    \item $\|\beta - \hat{\beta}_{\Sigma}\|_2^2 = 0.000387$
+\end{itemize}
+
+
+
+\subsection{iii}
 
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
 def p_value_ordinary_least_square(X: np.ndarray, Y: np.ndarray, 
@@ -112,7 +122,30 @@ def p_value_ordinary_least_square(X: np.ndarray, Y: np.ndarray,
     return p_value
 \end{lstlisting}
 
-\subsection{iv) Estatística Z para o Estimador Generalizado}
+\textbf{Testes de Hipótese - Mínimos Quadrados Ordinários:}
+\begin{itemize}
+    \item p-valor para $\beta_0$: 0.1544
+    \item p-valor para $\beta_1$: 0.7422
+\end{itemize}
+
+
+Não podemos descartar a hipótese nula para ambos os coeficientes ao
+nível de significância de 5\%.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{iv}
 
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
 def calculate_Z_sigma(X: np.ndarray, Sigma: np.ndarray, 
@@ -128,8 +161,38 @@ def calculate_Z_sigma(X: np.ndarray, Sigma: np.ndarray,
     return Z
 \end{lstlisting}
 
-\subsection{v) P-valores para o Estimador Generalizado}
+\begin{itemize}
+    \item Estatística $Z_\Sigma$ para $\beta_0$: 73.67
+\end{itemize}
 
+\subsection{v}
+Condicionado em X, o termo da diagonal i do denominador de Z é a raiz quadrada da variância do estimador
+generalizado $\hat{\beta}_{\Sigma}$.
+
+Variância de $\hat{\beta} = (X^T\Sigma^{-1}X)^{-1} = \begin{pmatrix}
+        \text{Var}(\beta_0)          & \text{Cov}(\beta_0, \beta_1) \\
+        \text{Cov}(\beta_0, \beta_1) & \text{Var}(\beta_1)
+    \end{pmatrix}$
+
+
+Na hipótese $H_0$ de $\beta_0 = 0$, temos que $\hat{\beta}_{\Sigma} \sim \mathcal{N}(\beta_0, \text{Var}(\beta_0))$.
+Assim, a estatística Z é dada por:
+
+\[
+    Z_{\Sigma} = \frac{\hat{\beta}_{\Sigma}}{\sqrt{\text{Var}(\hat{\beta}_{\Sigma})}}
+\]
+
+
+Para obtermos o p-valor, fazemos $Z/\sqrt{\sigma^2}$, onde $\sigma^2 = \frac{1}{n-p-1}\varepsilon^T \Sigma^{-1} \varepsilon$
+
+\begin{align*}
+    \text{Var}(\hat{\beta}_{\Sigma}) & = \text{Var}((X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1} Y)                                        \\[10pt]
+                                     & = (X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1} \text{Var}(Y) \Sigma^{-1} X (X^T \Sigma^{-1} X)^{-1} \\[10pt]
+                                     & = (X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1} \Sigma \Sigma^{-1} X (X^T \Sigma^{-1} X)^{-1}        \\[10pt]
+                                     & = (X^T \Sigma^{-1} X)^{-1}                                                                      \\[10pt]
+\end{align*}
+
+Calculando o p-valor com o código abaixo:
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
 def p_value_generalized_least_square(X: np.ndarray, Y: np.ndarray,
                                     Sigma: np.ndarray, 
@@ -159,54 +222,11 @@ def p_value_generalized_least_square(X: np.ndarray, Y: np.ndarray,
 \end{lstlisting}
 
 Esta implementação permite comparar os dois estimadores e calcular a significância estatística dos coeficientes em ambos os casos.
-
-\subsection{vi) Resultados Numéricos}
-
-Executando o código implementado, obtemos os seguintes resultados:
-
-\textbf{Comparação dos Estimadores:}
-\begin{itemize}
-    \item Parâmetros Verdadeiros: $\beta = [1.0, 0.25]$
-    \item Estimador Ordinário: $\hat{\beta}_{OLS} = [-34.463, 6.948]$
-    \item Estimador Generalizado: $\hat{\beta}_{\Sigma} = [1.019, 0.244]$
-\end{itemize}
-
-\textbf{Erro Quadrático dos Estimadores:}
-\begin{itemize}
-    \item $\|\beta - \hat{\beta}_{OLS}\|_2^2 = 1302.51$
-    \item $\|\beta - \hat{\beta}_{\Sigma}\|_2^2 = 0.000387$
-\end{itemize}
-
-O estimador generalizado apresenta erro dramaticamente menor (cerca de 3.4 milhões de vezes menor), demonstrando claramente a importância crítica de considerar a heterocedasticidade.
-
-\textbf{Testes de Hipótese - Mínimos Quadrados Ordinários:}
-\begin{itemize}
-    \item p-valor para $\beta_0$: 0.1544
-    \item p-valor para $\beta_1$: 0.7422
-\end{itemize}
-
-Com nível de significância de 5\%, não podemos rejeitar a hipótese nula para ambos os coeficientes usando o estimador ordinário.
-
+\\
 \textbf{Testes de Hipótese - Estimador Generalizado:}
 \begin{itemize}
-    \item Estatística Z para $\beta_0$: 73.67
-    \item p-valor para $\beta_0$: $< 10^{-15}$ (praticamente zero)
-    \item p-valor para $\beta_1$: $< 10^{-15}$ (praticamente zero)
+    \item p-valor para $\beta_0$: 0.0
+    \item p-valor para $\beta_1$: 0.0
 \end{itemize}
-
-Com o estimador generalizado, ambos os coeficientes são altamente significativos estatisticamente, evidenciando a superior eficiência deste método.
-
-\textbf{Conclusões:}
-\begin{enumerate}
-    \item O estimador de mínimos quadrados ordinários (OLS) falha completamente na presença de heterocedasticidade severa, fornecendo estimativas muito distantes dos valores verdadeiros ($\hat{\beta}_0 = -34.46$ vs $\beta_0 = 1.0$).
-
-    \item O estimador generalizado (GLS) é extremamente superior, com erro cerca de 3.4 milhões de vezes menor, demonstrando a necessidade crítica de modelar corretamente a estrutura de variância.
-
-    \item Os testes de significância baseados no OLS são não-confiáveis, falhando em detectar coeficientes que são claramente diferentes de zero.
-
-    \item O estimador GLS fornece testes estatísticos apropriados, detectando corretamente a significância dos parâmetros.
-
-    \item Este exemplo ilustra dramaticamente por que a correção para heterocedasticidade não é apenas uma melhoria técnica, mas uma necessidade fundamental para análise estatística válida.
-\end{enumerate}
 
 \newpage
