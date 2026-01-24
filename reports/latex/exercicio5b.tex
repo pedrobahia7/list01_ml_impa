@@ -10,32 +10,337 @@ Neste exercício, implementamos e comparamos diferentes métodos de seleção de
     \item \textbf{Backward Stepwise Selection}: Remove features sequencialmente
 \end{itemize}
 
-\subsection{Preparação dos Dados}
 
-\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
-import statsmodels.api as sm
-import numpy as np
-import pandas as pd
-from sklearn.model_selection import train_test_split, KFold
-from sklearn.linear_model import Lasso
-from sklearn import preprocessing
-
-# Load and prepare data
-bodyfat = pd.read_csv("../data/bodyfat.csv")
-X = bodyfat.drop(columns=["BodyFat", "Density"])
-y = bodyfat["BodyFat"]
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=10
-)
-
-# Setup cross-validation
-kf = KFold(n_splits=5, shuffle=True, random_state=10)
-\end{lstlisting}
 
 \subsection{Implementação dos Algoritmos}
 
 Implementamos os três métodos de seleção: Best Subset Selection, Forward Stepwise Selection e Backward Stepwise Selection.
 
+
+\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
+    def best_subset_selection(
+    X_train: np.ndarray, Y_train: np.ndarray
+) -> dict:
+    """
+    Perform best subset selection for linear regression. This function evaluates all possible combinations of features
+    and selects the best model for each subset size based on R-squared.
+
+    Parameters:
+    - X_train (np.ndarray): Training feature data. Shape (n_samples, n_features).
+    - Y_train (np.ndarray): Training target data. Shape (n_samples,).
+
+    Returns:
+    - dict: A dictionary where each key is the subset size (as a string) and the value is another dictionary containing:
+        - 'best_model': The statsmodels OLS regression results object for the best model.
+        - 'best_r2': The R-squared value of the best model.
+        - 'best_features': A tuple of feature indices used in the best model.
+
+
+    """
+
+    # Useful dimensions
+    n, p = X_train.shape
+
+    # Initialize dictionary to store the best model for each subset size
+    best_model_k = {}
+
+    # Create model for no feature
+    best_model_k["0"] = {}
+    best_model_k["0"]["best_model"] = sm.OLS(
+        Y_train, np.ones((len(Y_train), 1))
+    ).fit()
+    best_model_k["0"]["best_r2"] = best_model_k["0"]["best_model"].rsquared
+    best_model_k["0"]["best_features"] = []
+    tests_made = [()]
+
+    for k in range(1, p + 1):
+        best_r2 = 0
+        best_features = []
+        best_model = []
+
+        # Create every model with k features (excluding intercept)
+        for feature_combination in itertools.combinations(range(p), k):
+            X_train_aux = sm.add_constant(X_train[:, feature_combination])
+            model = sm.OLS(Y_train, X_train_aux).fit()
+            tests_made.append(feature_combination)
+            if model.rsquared > best_r2:
+                best_r2 = model.rsquared
+                best_model = model
+                best_features = feature_combination
+
+        # Store the best model for this subset size
+        best_model_k[str(k)] = {
+            "best_model": best_model,
+            "best_r2": best_r2,
+            "best_features": list(best_features),
+        }
+
+    # Sanity checks
+    assert len(tests_made) == 2**p, (
+        "Number of feature subsets evaluated does not match expected count."
+    )
+    assert len(tests_made) == len(set(tests_made)), (
+        "Duplicate feature subsets were evaluated."
+    )
+    assert len(best_model_k.keys()) == p + 1, (
+        "Best model dictionary does not contain expected number of entries."
+    )
+    assert not (
+        any(
+            [
+                best_model_k[k]["best_model"] == []
+                for k in best_model_k.keys()
+            ]
+        )
+    ), "Not all best models are valid."
+
+    return best_model_k
+
+
+# %%
+def foward_stepwise_selection(
+    X_train: np.ndarray, Y_train: np.ndarray
+) -> dict:
+    """
+    Function to perform forward stepwise selection for linear regression. This function iteratively adds features
+    to the model and selects the best model for each subset size based on R-squared. Only one feature is added at each step.
+
+
+    Parameters:
+    - X_train (np.ndarray): Training feature data. Shape (n_samples, n_features).
+    - Y_train (np.ndarray): Training target data. Shape (n_samples,).
+
+    Returns:
+    - dict: A dictionary where each key is the subset size (as a string) and the value is another dictionary containing:
+        - 'best_model': The statsmodels OLS regression results object for the best model.
+        - 'best_r2': The R-squared value of the best model.
+        - 'best_features': A tuple of feature indices used in the best model.
+
+
+    """
+
+    # Useful dimensions
+    n, p = X_train.shape
+
+    # Initialize dictionary to store the best model for each subset size
+    best_model_k = {}
+
+    # Create model for no feature
+    best_model_k["0"] = {}
+    best_model_k["0"]["best_model"] = sm.OLS(
+        Y_train, np.ones((len(Y_train), 1))
+    ).fit()
+    best_model_k["0"]["best_r2"] = best_model_k["0"]["best_model"].rsquared
+    best_model_k["0"]["best_features"] = []
+
+    # Variables to keep track of features
+    remaining_features = list(range(p))
+    current_features = []
+
+    for k in range(1, p + 1):
+        # Initialize variables for this step
+        tests_made = []
+
+        best_r2 = 0
+        best_features = []
+        best_model = []
+
+        # Create every model with k features (excluding intercept)
+        for new_feature in remaining_features:
+            feature_combination_list = current_features + [new_feature]
+            feature_combination_list.sort()
+
+            X_train_aux = sm.add_constant(
+                X_train[:, feature_combination_list]
+            )
+            model = sm.OLS(Y_train, X_train_aux).fit()
+            tests_made.append(feature_combination_list)
+
+            # Check if this model is the best so far
+            if model.rsquared > best_r2:
+                best_r2 = model.rsquared
+                best_model = model
+                best_features = feature_combination_list
+
+        # Move best feature for k from the remainig_features list to current_features
+        remaining_features = list(
+            set(remaining_features) - set(best_features)
+        )
+        remaining_features.sort()
+        current_features = list(set(best_features + current_features))
+        current_features.sort()
+
+        # Store the best model for this subset size
+        best_model_k[str(k)] = {
+            "best_model": best_model,
+            "best_r2": best_r2,
+            "best_features": current_features.copy(),
+        }
+
+        assert len(tests_made) == p + 1 - k, (
+            "Number of feature subsets evaluated does not match expected count."
+        )
+        assert len(tests_made) == len(
+            set(tuple(sorted(test)) for test in tests_made)
+        ), "Duplicate feature subsets were evaluated."
+        assert all([len(test) == k for test in tests_made]), (
+            "Not all tested features added have size k."
+        )
+        assert (
+            best_model_k[str(k - 1)]["best_features"] in tests_made[i]
+            for i in tests_made
+        ), "All tests must include previously selected features."
+
+    assert len(best_model_k.keys()) == p + 1, (
+        "Best model dictionary does not contain expected number of entries."
+    )
+    assert not (
+        any(
+            [
+                best_model_k[k]["best_model"] == []
+                for k in best_model_k.keys()
+            ]
+        )
+    ), "Not all best models are valid."
+
+    return best_model_k
+
+
+# %%
+def backward_stepwise_selection(
+    X_train: np.ndarray, Y_train: np.ndarray
+) -> dict:
+    """
+    Function to perform backward stepwise selection for linear regression. This function iteratively removes features
+    from the model and selects the best model for each subset size based on R-squared. Only one feature is removed at each step.
+
+
+    Parameters:
+    - X_train (np.ndarray): Training feature data. Shape (n_samples, n_features).
+    - Y_train (np.ndarray): Training target data. Shape (n_samples,).
+
+    Returns:
+    - dict: A dictionary where each key is the subset size (as a string) and the value is another dictionary containing:
+        - 'best_model': The statsmodels OLS regression results object for the best model.
+        - 'best_r2': The R-squared value of the best model.
+        - 'best_features': A tuple of feature indices used in the best model.
+
+
+    """
+
+    # Useful dimensions
+    n, p = X_train.shape
+
+    # Initialize dictionary to store the best model for each subset size
+    best_model_k = {}
+    all_features = list(range(p))
+
+    # Create model for all features
+    best_model_k[f"{p}"] = {}
+    best_model_k[f"{p}"]["best_model"] = sm.OLS(
+        Y_train, sm.add_constant(X_train)
+    ).fit()
+    best_model_k[f"{p}"]["best_r2"] = best_model_k[f"{p}"][
+        "best_model"
+    ].rsquared
+    best_model_k[f"{p}"]["best_features"] = list(all_features)
+
+    # Variables to keep track of features
+    current_features = all_features
+    deleted_features = []
+
+    for k in range(1, p + 1):
+        # Initialize variables for this step
+        tests_made = []
+
+        best_r2 = 0
+        best_features = []
+        best_model = []
+
+        # Create every model with k features (excluding intercept)
+        for new_feature in current_features:
+            feature_combination_list = current_features.copy()
+            feature_combination_list.remove(new_feature)
+            X_train_aux = sm.add_constant(
+                X_train[:, feature_combination_list]
+            )
+            model = sm.OLS(Y_train, X_train_aux).fit()
+            tests_made.append(feature_combination_list)
+
+            # Check if this model is the best so far
+            if model.rsquared > best_r2:
+                best_r2 = model.rsquared
+                best_model = model
+                best_features = feature_combination_list
+
+        # Update current features and deleted features lists
+        deleted_features += list(
+            set(current_features) - set(best_features)
+        )
+        current_features = best_features
+
+        # Store the best model for this subset size
+        best_model_k[str(p - k)] = {
+            "best_model": best_model,
+            "best_r2": best_r2,
+            "best_features": current_features.copy(),
+        }
+
+        # Sanity checks
+        assert len(tests_made) == p - k + 1, (
+            "Number of feature subsets evaluated does not match expected count."
+        )
+        assert len(tests_made) == len(
+            set(tuple(sorted(test)) for test in tests_made)
+        ), "Duplicate feature subsets were evaluated."
+        assert all([len(test) == p - k for test in tests_made]), (
+            "Not all tested features added have size p-k."
+        )
+        assert (
+            tests_made[i] in best_model_k[str(p - k + 1)]["best_features"]
+            for i in tests_made
+        ), "All tests must be included in previously selected features."
+        assert len(deleted_features) == k, (
+            "Number of deleted features does not match expected count."
+        )
+
+    # Create model for no feature
+    best_model_k["0"] = {}
+    best_model_k["0"]["best_model"] = sm.OLS(
+        Y_train, np.ones((len(Y_train), 1))
+    ).fit()
+    best_model_k["0"]["best_r2"] = best_model_k["0"]["best_model"].rsquared
+    best_model_k["0"]["best_features"] = []
+
+    # Sanity checks
+    assert len(best_model_k.keys()) == p + 1, (
+        "Best model dictionary does not contain expected number of entries."
+    )
+    assert not (
+        any(
+            [
+                best_model_k[k]["best_model"] == []
+                for k in best_model_k.keys()
+            ]
+        )
+    ), "Not all best models are valid."
+
+    best_model_k = dict(
+        sorted(best_model_k.items(), key=lambda x: int(x[0]))
+    )
+    return best_model_k
+
+
+models_backward = backward_stepwise_selection(
+    X_train.values, y_train.values
+)
+
+
+# %%
+models_forward = foward_stepwise_selection(X_train.values, y_train.values)
+models_best = best_subset_selection(X_train.values, y_train.values)
+models_backward = backward_stepwise_selection(
+    X_train.values, y_train.values
+)
+\end{lstlisting}
 \newpage

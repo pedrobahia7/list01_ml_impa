@@ -1,6 +1,5 @@
 \section{Exercício 3a}
 \begin{align*}
-
     Y_i | X_i     & \sim \text{Laplace}(\beta^T x_i, b)                                             \\
     \epsilon      & \sim \text{Laplace}(0, b)                                                       \\
     Y_i | X_i     & = Y = \beta^T X + \epsilon                                                      \\[10pt]
@@ -10,11 +9,20 @@
 
 \begin{align*}
     \text{Var}(Y) & = \text{Var}(\beta^T X + \epsilon) = \text{Var}(\beta^T X) + \text{Var}(\epsilon) \\
-                  & = 0 + b = b^
+                  & = 0 + b = b
 \end{align*}
 
-Como toda combinação linear de variáveis aleatórias com distribuição de Laplace resulta em uma distribuição de Laplace, Y é uma Lplace com os parametros definidos
+Como toda combinação linear de variáveis aleatórias com distribuição de Laplace resulta em uma distribuição de Laplace, $Y$ é uma variável aleatória de Laplace com parâmetros $\text{Laplace}(\beta^T X, b)$.
 
+Função de perda (likelihood):
+
+Dado que Y é iid, temos que:
+\[P(Y|X, \beta) = \prod_{i=1}^{n} \frac{1}{2b} \exp\left(-\frac{|Y_i - \beta^T X_i|}{b}\right)\]\begin{align*}
+    \log P(Y|X, \beta) & = \log \prod_{i=1}^{n} \frac{1}{2b} \exp\left(-\frac{|Y_i - \beta^T X_i|}{b}\right)             \\
+                       & = \sum_{i=1}^{n} \log \left(\frac{1}{2b} \exp\left(-\frac{|Y_i - \beta^T X_i|}{b}\right)\right) \\
+                       & = \sum_{i=1}^{n} \left(\log\frac{1}{2b} - \frac{|Y_i - \beta^T X_i|}{b}\right)                  \\
+                       & = n\log\frac{1}{2b} - \frac{1}{b}\sum_{i=1}^{n} |Y_i - \beta^T X_i|
+\end{align*}
 
 
 \newpage

@@ -1,3 +1,16 @@
 \section{Exercício 4d}
+\subsection{Análise Específica do k-NN}
 
+A Figura \ref{fig:knn_comparison} mostra como a performance do k-NN varia com diferentes valores de k:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../figures/4/knn_error_comparison.png}
+    \caption{Erros do k-NN para diferentes números de vizinhos (K=1 a K=10)}
+    \label{fig:knn_comparison}
+\end{figure}
+
+Para k=1, o modelo apresenta overfitting, com erro de treino nulo já que ele simplesmente repete o dado do vizinho mais próximo, a própria amostra, e erro de teste alto.
+Conforme k aumenta, o modelo generaliza melhor, aumentando o erro de treino e reduzindo o erro de teste, já que mais vizinhos são considerados na decisão de classe.
+Para os k analisados, não houve underfitting, mas se k fosse muito grande (próximo ao número total de amostras), o modelo tenderia a classificar todas as amostras na classe majoritária, aumentando ambos os erros.
 \newpage

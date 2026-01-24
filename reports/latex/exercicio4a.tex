@@ -1,50 +1,6 @@
 \section{Exercício 4a}
-
-\subsection{Implementação dos Algoritmos de Classificação}
-
-Neste exercício, implementamos e comparamos cinco diferentes algoritmos de classificação usando o dataset de futebol:
-
-\begin{itemize}
-    \item \textbf{LDA} (Linear Discriminant Analysis)
-    \item \textbf{QDA} (Quadratic Discriminant Analysis)
-    \item \textbf{LR} (Logistic Regression)
-    \item \textbf{NB} (Naive Bayes Gaussiano)
-    \item \textbf{kNN} (k-Nearest Neighbors)
-\end{itemize}
-
-\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis as QDA
-from sklearn.linear_model import LogisticRegression as LR
-from sklearn.naive_bayes import GaussianNB as NB
-from sklearn.neighbors import KNeighborsClassifier as kNN
-from sklearn import preprocessing
-
-# Load and prepare data
-df = pd.read_csv("../data/soccer.csv")
-X = df.drop("target", axis=1)
-y = df[["target"]]
-
-# Split dataset
-X_train, y_train = X.iloc[:2560], y.iloc[:2560]
-X_test, y_test = X.iloc[2560:], y.iloc[2560:]
-
-# Remove categorical variables and standardize
-X_train = X_train.drop(["home_team", "away_team"], axis=1)
-X_test = X_test.drop(["home_team", "away_team"], axis=1)
-scaler = preprocessing.StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
-\end{lstlisting}
-
-\textbf{Informações do Dataset:}
-\begin{itemize}
-    \item Amostras de treino: 2560
-    \item Amostras de teste: 640
-    \item Features após pré-processamento: 11 (removendo variáveis categóricas)
-\end{itemize}
-
+O modelo knn necessida que as features sejam normalizadas pois ele usa
+uma métrica de distância para encontrar os vizinhos mais próximos. Se as features não
+forem normalizadas, aquelas com escalas maiores podem dominar a métrica de distância,
+fazendo com que o algoritmo não funcione corretamente.
 \newpage

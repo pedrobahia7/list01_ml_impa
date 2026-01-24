@@ -1,16 +1,4 @@
-\section{Exercício 5b}
-
-\subsection{Métodos de Seleção de Modelos}
-
-Neste exercício, implementamos e comparamos diferentes métodos de seleção de modelos para regressão linear usando o dataset de composição corporal (bodyfat). Os métodos implementados incluem:
-
-\begin{itemize}
-    \item \textbf{Best Subset Selection}: Avalia todas as combinações possíveis de features
-    \item \textbf{Forward Stepwise Selection}: Adiciona features sequencialmente
-    \item \textbf{Backward Stepwise Selection}: Remove features sequencialmente
-\end{itemize}
-
-\subsection{Preparação dos Dados}
+\section{Exercício 5a}
 
 \begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
 import statsmodels.api as sm
@@ -33,9 +21,4 @@ X_train, X_test, y_train, y_test = train_test_split(
 # Setup cross-validation
 kf = KFold(n_splits=5, shuffle=True, random_state=10)
 \end{lstlisting}
-
-\subsection{Implementação dos Algoritmos}
-
-Implementamos os três métodos de seleção: Best Subset Selection, Forward Stepwise Selection e Backward Stepwise Selection.
-
 \newpage
