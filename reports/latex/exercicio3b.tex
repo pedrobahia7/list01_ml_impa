@@ -1,148 +1,31 @@
-\section{Exercício 3f}
+\section{Exercício 3b}
+\begin{align*}
+    Y_i | X_i     & \sim \text{Laplace}(\beta^T x_i, b)                                             \\
+    \epsilon      & \sim \text{Laplace}(0, b)                                                       \\
+    Y_i | X_i     & = Y = \beta^T X + \epsilon                                                      \\[10pt]
+    \mathbb{E}(Y) & = \mathbb{E}(\beta X + \epsilon) = \mathbb{E}(\beta^T X) + \mathbb{E}(\epsilon) \\
+                  & = \beta^T X + 0
+\end{align*}
 
-\subsection{i) Implementação dos Estimadores}
+\begin{align*}
+    \mathbb{V}(Y) & = \mathbb{V}(\beta X + \epsilon) = \mathbb{V}(\beta X) + \mathbb{V}(\epsilon) \\
+                  & = 0 + b
+\end{align*}
 
-Neste exercício, comparamos estimadores baseados em diferentes suposições sobre a distribuição dos erros. Implementamos estimadores que minimizam diferentes funções de perda:
+\noindent Toda combinação linear de Laplace são \\
+Laplace:
 
-\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
-import numpy as np
-import scipy
-import matplotlib.pyplot as plt
+\subsection*{Item b}
 
-def beta_ordinary(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
-    """
-    Compute the ordinary least squares estimator.
-    """
-    beta = np.linalg.inv(X.T @ X) @ X.T @ Y
-    return beta
+\begin{align*}
+    \mathcal{L}(\beta) & = - \log ( \ell(\beta|x,y,b) )                                                        \\[10pt]
+                       & = - \log \left( \frac{1}{2b} \cdot e^{-\sum_{i}^n \frac{|y_i - x_i\beta|}{b}} \right) \\[10pt]
+                       & = - \log(2b) + \sum_{i}^n \frac{|y_i - x_i\beta|}{b}                                  \\[10pt]
+                       & = - \log(2b) + \frac{1}{b} \sum_{i}^n |y_i - x_i\beta|
+\end{align*}
 
-def calculate_beta_hat(X: np.ndarray, Y: np.ndarray, error_distribution: str) -> np.ndarray:
-    """
-    Compute the estimator beta_hat based on the specified error distribution.
-    """
-    np.random.seed(0)
-    p = X.shape[1]
-    
-    if error_distribution == "gaussian":
-        def loss_function(beta):
-            return np.sum((Y - X @ beta) ** 2)
-    elif error_distribution == "laplacian":
-        def loss_function(beta):
-            return np.sum(np.abs(Y - X @ beta))
-    else:
-        raise ValueError("Unsupported error distribution")
-    
-    beta_0 = np.random.uniform(size=p)
-    beta_hat = scipy.optimize.minimize(loss_function, beta_0)
-    return beta_hat["x"]
-\end{lstlisting}
-
-Geramos dados sintéticos para testar os estimadores:
-
-\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
-np.random.seed(1)
-beta = np.array([-1.5, 2.0])
-input_range = np.linspace(-1, 1, 100)
-X = np.vstack([np.ones(100), input_range]).T
-y = X @ beta + np.random.normal(0, 0.3, 100)
-\end{lstlisting}
-
-A Figura \ref{fig:data_scatter_q3} mostra os dados gerados:
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{../figures/3/data_scatter.png}
-    \caption{Dados sintéticos para comparação dos estimadores}
-    \label{fig:data_scatter_q3}
-\end{figure}
-
-As Figuras \ref{fig:errors_hist_q3} e \ref{fig:errors_values_q3} mostram a análise dos erros:
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{../figures/3/errors_histogram.png}
-    \caption{Histograma dos erros}
-    \label{fig:errors_hist_q3}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{../figures/3/error_values_by_index.png}
-    \caption{Valores dos erros por índice}
-    \label{fig:errors_values_q3}
-\end{figure}
-
-\subsection{ii) Comparação dos Estimadores}
-
-Calculamos os estimadores para ambas as distribuições de erro:
-
-\textbf{Resultados sem Outliers:}
 \begin{itemize}
-    \item Parâmetros Verdadeiros: $\beta = [-1.5, 2.0]$
-    \item Estimador Gaussiano (minimize): $\hat{\beta}_{Gauss} = [-1.482, 2.050]$
-    \item Estimador Gaussiano (forma fechada): $\hat{\beta}_{OLS} = [-1.482, 2.050]$
-    \item Estimador Laplaciano: $\hat{\beta}_{Lap} = [-1.498, 2.082]$
+    \item $-\log(2b)$ é constante e pode ser desconsiderado na otimização
+    \item o mesmo pode ser dito sobre o termo que multiplica o somatório
 \end{itemize}
-
-\textbf{Análise de Erro (Norma L2):}
-\begin{itemize}
-    \item Erro do Estimador Gaussiano: $0.053$
-    \item Erro do Estimador Laplaciano: $0.082$
-\end{itemize}
-
-Sem outliers, o estimador gaussiano (mínimos quadrados) tem melhor performance, como esperado quando os erros seguem distribuição normal.
-
-A Figura \ref{fig:regression_fits} compara visualmente os ajustes:
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{../figures/3/regression_fits_comparison.png}
-    \caption{Comparação dos ajustes de regressão sem outliers}
-    \label{fig:regression_fits}
-\end{figure}
-
-\subsection{iii) Robustez a Outliers}
-
-Para testar a robustez, adicionamos um outlier extremo ao dataset:
-
-\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
-# Regenerate data and add outlier
-y[80] = 10  # Extreme outlier
-\end{lstlisting}
-
-\textbf{Resultados com Outlier:}
-\begin{itemize}
-    \item Parâmetros Verdadeiros: $\beta = [-1.5, 2.0]$
-    \item Estimador Gaussiano com outlier: $\hat{\beta}_{Gauss} = [-1.378, 2.237]$
-    \item Estimador Laplaciano com outlier: $\hat{\beta}_{Lap} = [-1.498, 2.083]$
-\end{itemize}
-
-\textbf{Análise de Erro com Outlier (Norma L2):}
-\begin{itemize}
-    \item Erro do Estimador Gaussiano: $0.266$ (aumento de 5x)
-    \item Erro do Estimador Laplaciano: $0.083$ (praticamente inalterado)
-\end{itemize}
-
-A Figura \ref{fig:regression_fits_outlier} mostra o impacto do outlier:
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{../figures/3/regression_fits_with_outlier.png}
-    \caption{Comparação dos ajustes de regressão com outlier}
-    \label{fig:regression_fits_outlier}
-\end{figure}
-
-\textbf{Conclusões:}
-\begin{enumerate}
-    \item \textbf{Eficiência}: Quando os erros são gaussianos e não há outliers, o estimador de mínimos quadrados (gaussiano) é mais eficiente.
-
-    \item \textbf{Robustez}: O estimador laplaciano é significativamente mais robusto a outliers, mantendo sua performance praticamente inalterada mesmo com outliers extremos.
-
-    \item \textbf{Trade-off}: Existe um trade-off entre eficiência (mínimos quadrados) e robustez (estimador laplaciano). A escolha depende das características esperadas dos dados.
-
-    \item \textbf{Aplicação Prática}: Em situações onde outliers são esperados ou a distribuição dos erros tem caudas pesadas, o estimador laplaciano (regressão com norma L1) é preferível.
-
-    \item \textbf{Impacto Dramático}: Um único outlier pode degradar significativamente a performance do estimador gaussiano (aumento de 5x no erro), enquanto o estimador laplaciano permanece praticamente inalterado.
-\end{enumerate}
-
 \newpage

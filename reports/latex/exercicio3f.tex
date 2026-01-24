@@ -47,29 +47,29 @@ X = np.vstack([np.ones(100), input_range]).T
 y = X @ beta + np.random.normal(0, 0.3, 100)
 \end{lstlisting}
 
-A Figura \ref{fig:data_scatter_q3} mostra os dados gerados:
+A Figura \ref{fig:data_scatter_3f} mostra os dados gerados:
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/3/data_scatter.png}
     \caption{Dados sintéticos para comparação dos estimadores}
-    \label{fig:data_scatter_q3}
+    \label{fig:data_scatter_3f}
 \end{figure}
 
-As Figuras \ref{fig:errors_hist_q3} e \ref{fig:errors_values_q3} mostram a análise dos erros:
+As Figuras \ref{fig:errors_hist_3f} e \ref{fig:errors_values_3f} mostram a análise dos erros:
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/3/errors_histogram.png}
     \caption{Histograma dos erros}
-    \label{fig:errors_hist_q3}
+    \label{fig:errors_hist_3f}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/3/error_values_by_index.png}
     \caption{Valores dos erros por índice}
-    \label{fig:errors_values_q3}
+    \label{fig:errors_values_3f}
 \end{figure}
 
 \subsection{ii) Comparação dos Estimadores}
@@ -92,13 +92,13 @@ Calculamos os estimadores para ambas as distribuições de erro:
 
 Sem outliers, o estimador gaussiano (mínimos quadrados) tem melhor performance, como esperado quando os erros seguem distribuição normal.
 
-A Figura \ref{fig:regression_fits} compara visualmente os ajustes:
+A Figura \ref{fig:regression_fits_3f} compara visualmente os ajustes:
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/3/regression_fits_comparison.png}
     \caption{Comparação dos ajustes de regressão sem outliers}
-    \label{fig:regression_fits}
+    \label{fig:regression_fits_3f}
 \end{figure}
 
 \subsection{iii) Robustez a Outliers}
@@ -123,13 +123,13 @@ y[80] = 10  # Extreme outlier
     \item Erro do Estimador Laplaciano: $0.083$ (praticamente inalterado)
 \end{itemize}
 
-A Figura \ref{fig:regression_fits_outlier} mostra o impacto do outlier:
+A Figura \ref{fig:regression_fits_outlier_3f} mostra o impacto do outlier:
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{../figures/3/regression_fits_with_outlier.png}
     \caption{Comparação dos ajustes de regressão com outlier}
-    \label{fig:regression_fits_outlier}
+    \label{fig:regression_fits_outlier_3f}
 \end{figure}
 
 \textbf{Conclusões:}

@@ -1,5 +1,19 @@
 \section{Exercício 3a}
+\begin{align*}
 
+    Y_i | X_i     & \sim \text{Laplace}(\beta^T x_i, b)                                             \\
+    \epsilon      & \sim \text{Laplace}(0, b)                                                       \\
+    Y_i | X_i     & = Y = \beta^T X + \epsilon                                                      \\[10pt]
+    \mathbb{E}(Y) & = \mathbb{E}(\beta X + \epsilon) = \mathbb{E}(\beta^T X) + \mathbb{E}(\epsilon) \\
+                  & = \beta^T X + 0
+\end{align*}
+
+\begin{align*}
+    \text{Var}(Y) & = \text{Var}(\beta^T X + \epsilon) = \text{Var}(\beta^T X) + \text{Var}(\epsilon) \\
+                  & = 0 + b = b^
+\end{align*}
+
+Como toda combinação linear de variáveis aleatórias com distribuição de Laplace resulta em uma distribuição de Laplace, Y é uma Lplace com os parametros definidos
 
 
 
