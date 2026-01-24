@@ -1,4 +1,5 @@
 \section{Exercício 2b}
+\subsection{i}
 A função de perda ponderada pela matriz de covariância dos erros é dada por:
 
 \[\hat{\beta}_{\Sigma} = \arg\min_{\beta} (Y - X\beta)^T \Sigma^{-1} (Y - X\beta)\]
@@ -14,6 +15,37 @@ Resolvendo para $\beta$, obtemos:
 \[X^T \Sigma^{-1} Y = X^T \Sigma^{-1} X \beta\]
 \[\hat{\beta}_{\Sigma} = (X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1} Y\]
 
+\subsection{ii}
+
+Como $(X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1}$ é uma constante em relação a $Y$, e
+sabemos que $Y = X\beta + \varepsilon$, onde $\mathbb{E}[\varepsilon] = 0$ e $\mathbb{E}[Y] = X\beta$,
+temos:
+
+\[\mathbb{E}[\hat{\beta}_{\Sigma}] = \mathbb{E}[(X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1} Y]\]
+\[\mathbb{E}[\hat{\beta}_{\Sigma}] = (X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1} \mathbb{E}[Y]\]
+\[\mathbb{E}[\hat{\beta}_{\Sigma}] = (X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1} X \beta\]
+\[\mathbb{E}[\hat{\beta}_{\Sigma}] = \beta\]
+
+\subsection{iii}
+
+$(X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1}$ é uma constante em relação a $Y$ e pode ser
+fatorado para fora da operação de variância como sua trasnposta multiplicando pela direita.
+Além disso, sabemos que $\mathbb{V}(Y) = \mathbb{\varepsilon} = \Sigma$, temos:
+
+
+\[\mathbb{V}(\hat{\beta}_{\Sigma}) = \mathbb{V}((X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1} Y)\]
+\[\mathbb{V}(\hat{\beta}_{\Sigma}) = (X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1} \mathbb{V}(Y) \Sigma^{-1} X (X^T \Sigma^{-1} X)^{-1}\]
+\[\mathbb{V}(\hat{\beta}_{\Sigma}) = (X^T \Sigma^{-1} X)^{-1} X^T \Sigma^{-1} \Sigma \Sigma^{-1} X (X^T \Sigma^{-1} X)^{-1}\]
+\[\mathbb{V}(\hat{\beta}_{\Sigma}) = (X^T \Sigma^{-1} X)^{-1}\]
+
+\subsection{iv}
+
+Sendo o $\varepsilon$ uma variável aleatória distribuída $\varepsilon \sim \mathcal{N}(0,\Sigma)$,
+Y uma i.i.d com $Y \sim \mathcal{N}(X\beta,\Sigma)$ e $\Sigma$ e $X$ fixos, o estimador
+$\hat{\beta}_{\Sigma}$ é uma combinação linear de variáveis aleatórias normais. Portanto, $\hat{\beta}_{\Sigma}$ também é uma variável aleatória normal.
+Assim, temos que:
+\[\hat{\beta}_{\Sigma} \sim \mathcal{N}(\mathbb{E}[\hat{\beta}_{\Sigma}], \mathbb{V}(\hat{\beta}_{\Sigma}))\]
+\[\hat{\beta}_{\Sigma} \sim \mathcal{N}(\beta, (X^T \Sigma^{-1} X)^{-1})\]
 
 
 \newpage
