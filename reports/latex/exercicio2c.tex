@@ -1,3 +1,50 @@
 \section{Exercício 2c}
+\subsection{i}
+Como $\Sigma$ é uma matriz diagonal e positiva definida, sua inversa $\Sigma^{-1}$ também será uma matriz diagonal,
+cujo elementos são os inversos dos elementos diagonais de $\Sigma$. Sua fatoração
+$\Sigma^{-1/2}$ também será uma matriz diagonal, cujos elementos são as raizes quadradas
+dos elementos de $\Sigma^{-1}$. Por fim, a transposta de $\Sigma^{-1/2}$ será igual a $\Sigma^{-1/2}$.
+
+Assim, podemos reescrever a função de perda ponderada como:
+\begin{align*}
+    \mathcal{L} & = {(y - X\beta)^T} {\Sigma^{-1}} {(y - X\beta)}                                       \\[10pt]
+                & = (y - X\beta)^T {\Sigma^{-1/2}}{\Sigma^{-1/2}} (y - X\beta)                          \\[10pt]
+                & = {(\Sigma^{-1/2}y - \Sigma^{-1/2}X\beta)^T} {(\Sigma^{-1/2}y - \Sigma^{-1/2}X\beta)} \\[10pt]
+\end{align*}
+
+Novamente, como $\Sigma^{-1/2}$ é uma matriz diagonal, cada elemento é dos vetores é
+multiplicado pelo respectivo elemento diagonal de $\Sigma^{-1/2}$. Enfim, expandindo a
+soma temos:
+\begin{align*}
+    \mathcal{L} & = \sum_{i=1}^{n} {(\frac{1}{\sigma_{ii}}y_i - \frac{1}{\sigma_{ii}}X_i\beta)^2}            \\[10pt]
+                & = \sum_{i=1}^{n} {\frac{1}{\sigma_{ii}^2}(y_i - X_i\beta)^2}                               \\[10pt]
+                & = \sum_{i=1}^{n} {w_i^2 (y_i - X_i\beta)^2} \quad \text{onde } w_i = \frac{1}{\sigma_{ii}} \\[10pt]
+                & = \sum_{i=1}^{n} {w_i^2 (y_i - \beta_0 - \sum_{j=1}^{p} X_{ij}\beta_j)^2}                  \\
+\end{align*}
+
+
+
+\subsection{ii}
+Os pesos da função de perda $w_i = \frac{1}{\sqrt{\Sigma_{ii}}}$
+ponderam a amostra i pelo inverso da variância do erro, de modo a normalizar as contribuições
+das amostras para a função de perda total. Assim, amostras com maior variância, ou seja, com maior incerteza e
+dificuldade de ajuste, terão menor impacto na função de perda, enquanto amostras com menor variância terão mais.
+
+\subsection{iii}
+De modo análogo à seção i), dado que $\Sigma$ é positiva definida, podemos reescrever a função de perda ponderada pela matriz de covariância dos erros
+\begin{align*}
+    \mathcal{L}
+     & = {(\Sigma^{-1/2}y - \Sigma^{-1/2}X\beta)^T} {(\Sigma^{-1/2}y - \Sigma^{-1/2}X\beta)}
+     & ={ (\~{Y} - \~{X}\beta)^T} {(\~{Y} - \~{X}\beta)}                                     \\[10pt]
+\end{align*}
+onde \~{Y} = \Sigma^{-1/2}y e \~{X} = \Sigma^{-1/2}X.
+
+
+Entretanto, como os elementos fora das diagonais não são nulos, o somatório é expandido como
+\begin{align*}
+    \mathcal{L} & = \sum_{i=1}^{n} {\sum_{j=1}^{n} {w_{ij}(y_i - X_i\beta)^2}}
+                & = \sum_{i=1}^{n} {\sum_{j=1}^{n} {w_{ij}(y_i - \beta_0 - \sum_{k=1}^{p} X_{ik}\beta_k)^2}} \\[10pt]
+\end{align*}
+
 
 \newpage
