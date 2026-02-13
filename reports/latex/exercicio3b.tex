@@ -1,31 +1,10 @@
 \section{Exercício 3b}
 \begin{align*}
-    Y_i | X_i     & \sim \text{Laplace}(\beta^T x_i, b)                                             \\
-    \epsilon      & \sim \text{Laplace}(0, b)                                                       \\
-    Y_i | X_i     & = Y = \beta^T X + \epsilon                                                      \\[10pt]
-    \mathbb{E}(Y) & = \mathbb{E}(\beta X + \epsilon) = \mathbb{E}(\beta^T X) + \mathbb{E}(\epsilon) \\
-                  & = \beta^T X + 0
+    \log P(Y|X, \beta) & = \log \prod_{i=1}^{n} \frac{1}{2b} \exp\left(-\frac{|Y_i - \beta^T X_i|}{b}\right)             \\
+                       & = \sum_{i=1}^{n} \log \left(\frac{1}{2b} \exp\left(-\frac{|Y_i - \beta^T X_i|}{b}\right)\right) \\
+                       & = \sum_{i=1}^{n} \left(\log\frac{1}{2b} - \frac{|Y_i - \beta^T X_i|}{b}\right)                  \\
+                       & = n\log\frac{1}{2b} - \frac{1}{b}\sum_{i=1}^{n} |Y_i - \beta^T X_i|
 \end{align*}
-
-\begin{align*}
-    \mathbb{V}(Y) & = \mathbb{V}(\beta X + \epsilon) = \mathbb{V}(\beta X) + \mathbb{V}(\epsilon) \\
-                  & = 0 + b
-\end{align*}
-
-\noindent Toda combinação linear de Laplace são \\
-Laplace:
-
-\subsection*{Item b}
-
-\begin{align*}
-    \mathcal{L}(\beta) & = - \log ( \ell(\beta|x,y,b) )                                                        \\[10pt]
-                       & = - \log \left( \frac{1}{2b} \cdot e^{-\sum_{i}^n \frac{|y_i - x_i\beta|}{b}} \right) \\[10pt]
-                       & = - \log(2b) + \sum_{i}^n \frac{|y_i - x_i\beta|}{b}                                  \\[10pt]
-                       & = - \log(2b) + \frac{1}{b} \sum_{i}^n |y_i - x_i\beta|
-\end{align*}
-
-\begin{itemize}
-    \item $-\log(2b)$ é constante e pode ser desconsiderado na otimização
-    \item o mesmo pode ser dito sobre o termo que multiplica o somatório
-\end{itemize}
+Como $n\log\frac{1}{2b}$ é constante em relação a $\beta$, é possível retirnar essa parte da
+função de perda para otimização. O mesmo pode ser dito para o fator $\frac{1}{b}$.
 \newpage

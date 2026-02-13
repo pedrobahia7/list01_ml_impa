@@ -1,3 +1,9 @@
 \section{Exercício 3d}
+A regra de atualização do gradiente descendente para a função de perda baseada na distribuição Laplace é dada por:
+\begin{align*}
+    \beta^{(t+1)} & = \beta^{(t)} - \eta \nabla_{\beta} \mathcal{L}(\beta^{(t)})                                \\[10pt]
+                  & = \beta^{(t)} - \eta \left( \sum_{i=1}^{n} \text{sign}(Y_i - X_i^T \beta^{(t)}) X_i \right) \\[10pt]
+                  & = \beta^{(t)} + \eta \sum_{i=1}^{n} \text{sign}(Y_i - X_i^T \beta^{(t)}) X_i                \\[10pt]
+\end{align*}
 
 \newpage

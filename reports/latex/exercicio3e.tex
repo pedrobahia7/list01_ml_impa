@@ -1,3 +1,21 @@
 \section{Exercício 3e}
+\subsection{i}
+O modelo com maior passo será o Laplaciano pois o gradiente da função gaussiana
+proporcional ao erro, enquanto o gradiente da função Laplaciana não é. Para ela,
+O erro define apenas o sinal do gradiente, e não sua magnitude.
+
+\subsection{ii}
+Para um mesmo beta e uma amostra de treino, a direção de ambos os gradientes
+será a mesma, já que ambos os gradientes dependem apenas do sinal do erro.
+
+Já para novas iterações, a direção pode ser diferente já que ambos os gradientes terão magnitude diferente e resultarão em atualizações diferentes de beta.
+
+
+\subsection{iii}
+Para o caso com mais de uma amostra, a direção do gradiente gaussiano será dada pela soma ponderada de cada erro, enquanto a direção do gradiente Laplaciano
+será dada pela soma dos sinais de cada erro.
+Assim, a direção do gradiente pode divergir entre os dois modelos, dependendo dos erros de cada amostra.
+Por exemplo, se uma amostra tiver um erro muito alto para uma direção enquanto outras duas tiverem erros baixos na direção oposta,
+o gradiente gaussiano tenderá a seguir a direção da amostra com maior erro, enquanto o gradiente Laplaciano tenderá a seguir a direção das duas amostras com erros menores.
 
 \newpage

@@ -1,24 +1,11 @@
 \section{Exercício 5a}
 
-\begin{lstlisting}[language=Python, basicstyle=\small\ttfamily, breaklines=true]
-import statsmodels.api as sm
-import numpy as np
-import pandas as pd
-from sklearn.model_selection import train_test_split, KFold
-from sklearn.linear_model import Lasso
-from sklearn import preprocessing
+Dentre os modelos analisados, o Lasso necessita que as variáveis sejam padronizadas para que o
+modelo funcione corretamente. Isso ocorre porque o Lasso aplica uma penalização baseada na soma dos
+valores absolutos dos coeficientes, o que pode levar a uma seleção inadequada de variáveis se elas estiverem em escalas diferentes.
+Variáveis com escalas maiores podem dominar a penalização, resultando em coeficientes distorcidos e
+uma seleção de variáveis que não reflete a importância real de cada variável no modelo.
 
-# Load and prepare data
-bodyfat = pd.read_csv("../data/bodyfat.csv")
-X = bodyfat.drop(columns=["BodyFat", "Density"])
-y = bodyfat["BodyFat"]
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=10
-)
-
-# Setup cross-validation
-kf = KFold(n_splits=5, shuffle=True, random_state=10)
-\end{lstlisting}
+Na função de custo, isso se traduz em uma constante proprocional ao valor da variável escalonada, que
+entraria dentro do somatório da penalização L1, afetando a otimização dos coeficientes.
 \newpage

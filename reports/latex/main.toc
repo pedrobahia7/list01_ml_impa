@@ -1,0 +1,55 @@
+\babel@toc {portuguese}{}\relax 
+\contentsline {section}{\numberline {1}Exercício 1a}{3}{}%
+\contentsline {section}{\numberline {2}Exercício 1b}{4}{}%
+\contentsline {section}{\numberline {3}Exercício 1c}{5}{}%
+\contentsline {section}{\numberline {4}Exercício 1d}{6}{}%
+\contentsline {section}{\numberline {5}Exercício 1e}{7}{}%
+\contentsline {section}{\numberline {6}Exercício 2a}{8}{}%
+\contentsline {section}{\numberline {7}Exercício 2b}{9}{}%
+\contentsline {subsection}{\numberline {7.1}i}{9}{}%
+\contentsline {subsection}{\numberline {7.2}ii}{9}{}%
+\contentsline {subsection}{\numberline {7.3}iii}{9}{}%
+\contentsline {subsection}{\numberline {7.4}iv}{10}{}%
+\contentsline {section}{\numberline {8}Exercício 2c}{11}{}%
+\contentsline {subsection}{\numberline {8.1}i}{11}{}%
+\contentsline {subsection}{\numberline {8.2}ii}{11}{}%
+\contentsline {subsection}{\numberline {8.3}iii}{12}{}%
+\contentsline {section}{\numberline {9}Exercício 2d}{13}{}%
+\contentsline {subsection}{\numberline {9.1}i}{13}{}%
+\contentsline {subsection}{\numberline {9.2}ii}{15}{}%
+\contentsline {subsection}{\numberline {9.3}iii}{16}{}%
+\contentsline {subsection}{\numberline {9.4}iv}{17}{}%
+\contentsline {subsection}{\numberline {9.5}v}{17}{}%
+\contentsline {section}{\numberline {10}Exercício 3a}{19}{}%
+\contentsline {section}{\numberline {11}Exercício 3b}{20}{}%
+\contentsline {section}{\numberline {12}Exercício 3c}{21}{}%
+\contentsline {section}{\numberline {13}Exercício 3d}{22}{}%
+\contentsline {section}{\numberline {14}Exercício 3e}{23}{}%
+\contentsline {subsection}{\numberline {14.1}i}{23}{}%
+\contentsline {subsection}{\numberline {14.2}ii}{23}{}%
+\contentsline {subsection}{\numberline {14.3}iii}{23}{}%
+\contentsline {section}{\numberline {15}Exercício 3f}{24}{}%
+\contentsline {subsection}{\numberline {15.1}i) Implementação dos Estimadores}{24}{}%
+\contentsline {subsection}{\numberline {15.2}ii) Comparação dos Estimadores}{26}{}%
+\contentsline {subsection}{\numberline {15.3}iii) Robustez a Outliers}{27}{}%
+\contentsline {section}{\numberline {16}Exercício 4a}{29}{}%
+\contentsline {section}{\numberline {17}Exercício 4b}{30}{}%
+\contentsline {subsection}{\numberline {17.1}Implementação dos Algoritmos de Classificação}{30}{}%
+\contentsline {subsection}{\numberline {17.2}Treinamento e Avaliação dos Modelos}{31}{}%
+\contentsline {section}{\numberline {18}Exercício 4c}{32}{}%
+\contentsline {section}{\numberline {19}Exercício 4d}{33}{}%
+\contentsline {subsection}{\numberline {19.1}Análise Específica do k-NN}{33}{}%
+\contentsline {section}{\numberline {20}Exercício 5a}{34}{}%
+\contentsline {section}{\numberline {21}Exercício 5b}{35}{}%
+\contentsline {subsection}{\numberline {21.1}Métodos de Seleção de Modelos}{35}{}%
+\contentsline {subsection}{\numberline {21.2}Implementação dos Algoritmos}{35}{}%
+\contentsline {section}{\numberline {22}Exercício 5c}{44}{}%
+\contentsline {subsection}{\numberline {22.1}Comparação dos Métodos - R²}{44}{}%
+\contentsline {section}{\numberline {23}Exercício 5d}{45}{}%
+\contentsline {subsection}{\numberline {23.1}Regressão Lasso com Validação Cruzada}{45}{}%
+\contentsline {subsection}{\numberline {23.2}Seleção do Parâmetro de Regularização}{45}{}%
+\contentsline {section}{\numberline {24}Exercício 5e}{47}{}%
+\contentsline {subsection}{\numberline {24.1}Comparação de Erros de Teste}{47}{}%
+\contentsline {subsection}{\numberline {24.2}Ranking dos Métodos}{47}{}%
+\contentsline {subsection}{\numberline {24.3}Análise dos Resultados}{48}{}%
+\contentsline {section}{\numberline {25}Exercício 5f}{49}{}%

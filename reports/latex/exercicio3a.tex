@@ -17,12 +17,6 @@ Como toda combinação linear de variáveis aleatórias com distribuição de La
 Função de perda (likelihood):
 
 Dado que Y é iid, temos que:
-\[P(Y|X, \beta) = \prod_{i=1}^{n} \frac{1}{2b} \exp\left(-\frac{|Y_i - \beta^T X_i|}{b}\right)\]\begin{align*}
-    \log P(Y|X, \beta) & = \log \prod_{i=1}^{n} \frac{1}{2b} \exp\left(-\frac{|Y_i - \beta^T X_i|}{b}\right)             \\
-                       & = \sum_{i=1}^{n} \log \left(\frac{1}{2b} \exp\left(-\frac{|Y_i - \beta^T X_i|}{b}\right)\right) \\
-                       & = \sum_{i=1}^{n} \left(\log\frac{1}{2b} - \frac{|Y_i - \beta^T X_i|}{b}\right)                  \\
-                       & = n\log\frac{1}{2b} - \frac{1}{b}\sum_{i=1}^{n} |Y_i - \beta^T X_i|
-\end{align*}
-
+\[P(Y|X, \beta) = \prod_{i=1}^{n} \frac{1}{2b} \exp\left(-\frac{|Y_i - \beta^T X_i|}{b}\right)\]
 
 \newpage
